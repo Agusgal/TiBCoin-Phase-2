@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -139,7 +139,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\Gui\Main.cpp" />
+    <ClCompile Include="..\Lib\ImGuiFileDialog\ImGuiFileDialog.cpp" />
+    <ClCompile Include="..\Lib\ImGui\imgui.cpp" />
+    <ClCompile Include="..\Lib\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="..\Lib\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="..\Lib\ImGui\imgui_impl_allegro5.cpp" />
+    <ClCompile Include="..\Lib\ImGui\imgui_stdlib.cpp" />
+    <ClCompile Include="..\Lib\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="..\Lib\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="..\Source\App\App.cpp" />
+    <ClCompile Include="..\Source\App\BlockChain\BlockChain.cpp" />
+    <ClCompile Include="..\Source\App\BlockChain\Blocks\Block.cpp" />
+    <ClCompile Include="..\Source\App\Gui\Gui.cpp" />
+    <ClCompile Include="..\Source\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Lib\ImGuiFileDialog\ImGuiFileDialog.h" />
+    <ClInclude Include="..\Lib\ImGuiFileDialog\ImGuiFileDialogConfig.h" />
+    <ClInclude Include="..\Lib\ImGui\imconfig.h" />
+    <ClInclude Include="..\Lib\ImGui\imgui.h" />
+    <ClInclude Include="..\Lib\ImGui\imgui_impl_allegro5.h" />
+    <ClInclude Include="..\Lib\ImGui\imgui_internal.h" />
+    <ClInclude Include="..\Lib\ImGui\imgui_stdlib.h" />
+    <ClInclude Include="..\Lib\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="..\Lib\ImGui\imstb_textedit.h" />
+    <ClInclude Include="..\Lib\ImGui\imstb_truetype.h" />
+    <ClInclude Include="..\Source\App\App.h" />
+    <ClInclude Include="..\Source\App\BlockChain\BlockChain.h" />
+    <ClInclude Include="..\Source\App\BlockChain\Blocks\Block.h" />
+    <ClInclude Include="..\Source\App\BlockChain\Blocks\json.hpp" />
+    <ClInclude Include="..\Source\App\Gui\Gui.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

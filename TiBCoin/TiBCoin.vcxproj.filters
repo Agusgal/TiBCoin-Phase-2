@@ -13,13 +13,120 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Gui">
+    <Filter Include="Source Files\App">
+      <UniqueIdentifier>{103f73f6-ba87-4291-b36c-03b6c5700894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\App">
+      <UniqueIdentifier>{d7757a0c-5ba4-4df3-a665-2263db6293b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\App\Gui">
       <UniqueIdentifier>{8598dc1d-1cbf-4a41-88e0-785dd69274a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\App\Gui">
+      <UniqueIdentifier>{995073d1-e0bf-4b14-b1ba-744f2f60f073}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{2bf87419-c6d2-447d-b9da-5c9c2aab0e2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Imgui">
+      <UniqueIdentifier>{5663eea5-9ea7-453c-825b-f001207fb7d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\ImGuiFileDialog">
+      <UniqueIdentifier>{44762517-31a3-4f5d-b376-d1372efd112c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\App\BlockChain">
+      <UniqueIdentifier>{b677f9e4-3d58-4b81-b84c-c3f69e58f0d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\App\BlockChain\Blocks">
+      <UniqueIdentifier>{249e7077-17af-42b3-9812-196d9993af24}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\Gui\Main.cpp">
+    <ClCompile Include="..\Source\App\Gui\Gui.cpp">
+      <Filter>Source Files\App\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\App.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Lib\ImGui\imgui.cpp">
+      <Filter>Lib\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Lib\ImGui\imgui_demo.cpp">
+      <Filter>Lib\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Lib\ImGui\imgui_draw.cpp">
+      <Filter>Lib\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Lib\ImGui\imgui_impl_allegro5.cpp">
+      <Filter>Lib\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Lib\ImGui\imgui_tables.cpp">
+      <Filter>Lib\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Lib\ImGui\imgui_widgets.cpp">
+      <Filter>Lib\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Lib\ImGui\imgui_stdlib.cpp">
+      <Filter>Lib\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Lib\ImGuiFileDialog\ImGuiFileDialog.cpp">
+      <Filter>Lib\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\BlockChain\Blocks\Block.cpp">
+      <Filter>Source Files\App\BlockChain\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\BlockChain\BlockChain.cpp">
+      <Filter>Source Files\App\BlockChain</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\App\Gui\Gui.h">
+      <Filter>Header Files\App\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\App.h">
+      <Filter>Header Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lib\ImGui\imconfig.h">
+      <Filter>Lib\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lib\ImGui\imgui.h">
+      <Filter>Lib\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lib\ImGui\imgui_impl_allegro5.h">
+      <Filter>Lib\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lib\ImGui\imgui_internal.h">
+      <Filter>Lib\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lib\ImGui\imstb_rectpack.h">
+      <Filter>Lib\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lib\ImGui\imstb_textedit.h">
+      <Filter>Lib\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lib\ImGui\imstb_truetype.h">
+      <Filter>Lib\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lib\ImGui\imgui_stdlib.h">
+      <Filter>Lib\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lib\ImGuiFileDialog\ImGuiFileDialog.h">
+      <Filter>Lib\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lib\ImGuiFileDialog\ImGuiFileDialogConfig.h">
+      <Filter>Lib\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\BlockChain\Blocks\Block.h">
+      <Filter>Source Files\App\BlockChain\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\BlockChain\Blocks\json.hpp">
+      <Filter>Source Files\App\BlockChain\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\BlockChain\BlockChain.h">
+      <Filter>Source Files\App\BlockChain</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
