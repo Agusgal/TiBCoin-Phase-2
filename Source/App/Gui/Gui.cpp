@@ -14,7 +14,7 @@
 namespace data 
 {
 	const unsigned int width = 1200;
-	const unsigned int height = 500;
+	const unsigned int height = 650;
 
 	const char* fixedFormat = ".json";
 	int notSelectedIndex = -1;

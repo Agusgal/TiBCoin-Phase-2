@@ -1,8 +1,8 @@
 #include <iostream>
 #include "App/App.h"
 
-#define DEMO
-//#define DEPLOY
+//#define DEMO
+#define DEPLOY
 
 #ifdef DEPLOY
 int main()
