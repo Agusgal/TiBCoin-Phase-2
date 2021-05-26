@@ -153,6 +153,7 @@
     <ClCompile Include="..\Source\App\Gui\Gui.cpp" />
     <ClCompile Include="..\Source\Main.cpp" />
     <ClCompile Include="Blockmicho.cpp" />
+    <ClCompile Include="Merkle.cpp" />
     <ClCompile Include="Transaction.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +173,7 @@
     <ClInclude Include="..\Source\App\BlockChain\Blocks\json.hpp" />
     <ClInclude Include="..\Source\App\Gui\Gui.h" />
     <ClInclude Include="Blockmicho.h" />
+    <ClInclude Include="Merkle.h" />
     <ClInclude Include="Transaction.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

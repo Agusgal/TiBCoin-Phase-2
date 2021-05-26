@@ -1,4 +1,4 @@
-#include "Block.h"
+#include "Blockmicho.h"
 #include <string>
 
 
@@ -15,7 +15,7 @@ Block::~Block()
 
 }
 
-Block::Block(json block)
+Block::Block(const json& block)
 {
 
 	ntx = block["nTx"].get<unsigned int>();

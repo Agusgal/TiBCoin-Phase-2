@@ -32,8 +32,9 @@ public:
 	void setNtxout(unsigned int nTxout_);
 	void setVin(Vin vin_);
 	void setVout(Vout vout_);
-
+	friend Merkle;
 private:
+
 	string txid;
 	unsigned int nTxin;
 	unsigned int nTxout;
