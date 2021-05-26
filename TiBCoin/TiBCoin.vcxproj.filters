@@ -40,6 +40,9 @@
     <Filter Include="Source Files\App\BlockChain\Blocks">
       <UniqueIdentifier>{249e7077-17af-42b3-9812-196d9993af24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\App\BlockChain\Blocks\Transactions">
+      <UniqueIdentifier>{c9d9898f-c693-4dbc-99e9-ce959f490807}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\App\Gui\Gui.cpp">
@@ -80,6 +83,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\App\BlockChain\BlockChain.cpp">
       <Filter>Source Files\App\BlockChain</Filter>
+    </ClCompile>
+    <ClCompile Include="Blockmicho.cpp">
+      <Filter>Source Files\App\BlockChain\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="Transaction.cpp">
+      <Filter>Source Files\App\BlockChain\Blocks\Transactions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +136,12 @@
     </ClInclude>
     <ClInclude Include="..\Source\App\BlockChain\BlockChain.h">
       <Filter>Source Files\App\BlockChain</Filter>
+    </ClInclude>
+    <ClInclude Include="Blockmicho.h">
+      <Filter>Source Files\App\BlockChain\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="Transaction.h">
+      <Filter>Source Files\App\BlockChain\Blocks\Transactions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
