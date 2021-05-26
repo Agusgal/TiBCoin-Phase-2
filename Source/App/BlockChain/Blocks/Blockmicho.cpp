@@ -330,3 +330,33 @@ const string BlockMicho::getData(const BlockInfo& data)
 	}
 }
 
+string BlockMicho::fliptree(string str) {
+	string resul = "";
+	string salto = "\n\n";
+	int lim = str.size();
+	int nivel = 2;
+	int j = 0;
+
+	for (int i = lim; nivel > 0; i--)
+	{
+		if (str[i] == '\n') {
+			j = 1 + i;
+			while ((str[j] != '\n') && (j < lim)) {
+				resul += str[j];
+				j++;
+			}
+			resul += salto;
+			//nivel--;
+			i--;
+		}
+		if (i == 0) {
+			j = i;
+			while ((str[j] != '\n') && (j < lim)) {
+				resul += str[j];
+				j++;
+			}
+			nivel = 0;
+		}
+	}
+	return resul;
+}
