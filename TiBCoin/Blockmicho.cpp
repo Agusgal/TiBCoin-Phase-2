@@ -12,6 +12,7 @@ Block::Block()
 
 Block::~Block()
 {
+
 }
 
 Block::Block(json block)
