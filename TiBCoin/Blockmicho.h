@@ -1,6 +1,6 @@
 #pragma once
 #include "Transaction.h"
-//#include "Merkle.h"
+#include "Merkle.h"
 //#include <nlohmann/json.hpp>
 //#include "json.hpp"
 
@@ -10,6 +10,7 @@ using json = nlohmann::json;
 
 class Block {
 public:
+	//friend Merkle;
 	Block();
 	Block(const json& block);
 	~Block();
@@ -34,6 +35,7 @@ public:
 	//friend class Merkle;
 
 private:
+
 	vector<Transaction> Tx;
 	unsigned int ntx;
 	unsigned int height;

@@ -90,6 +90,9 @@
     <ClCompile Include="Transaction.cpp">
       <Filter>Source Files\App\BlockChain\Blocks\Transactions</Filter>
     </ClCompile>
+    <ClCompile Include="Merkle.cpp">
+      <Filter>Source Files\App\BlockChain\Blocks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\App\Gui\Gui.h">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="Transaction.h">
       <Filter>Source Files\App\BlockChain\Blocks\Transactions</Filter>
+    </ClInclude>
+    <ClInclude Include="Merkle.h">
+      <Filter>Source Files\App\BlockChain\Blocks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
