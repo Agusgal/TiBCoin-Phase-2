@@ -31,6 +31,7 @@ Gui::Gui(void) :
 	index(data::notSelectedIndex),
 	chainLength(0)
 {
+	blockData = {"", "", "", "", ""};
 	initAllegro();
 }
 
@@ -157,8 +158,6 @@ const Events Gui::checkForEvent(void)
 			/*If it's not the first run after update...*/
 			if (state > States::INIT)
 			{
-				//ImGui::NewLine(); ImGui::NewLine();
-
 				/*Shows files from path.*/
 				if (showFile())
 				{
@@ -201,7 +200,10 @@ const Events Gui::checkForEvent(void)
 			{
 				ImGui::NewLine();
 
+				showBlockInfo();
+
 				/*Shows actions to perform to a given block.*/
+				ImGui::NewLine();
 				showBlockchainMenu();
 				ImGui::NewLine(); ImGui::NewLine();
 
@@ -254,18 +256,18 @@ inline void Gui::showBlockchainMenu()
 	};
 
 	/*Creates buttons for different functionalities.*/
-	displayWidget("Block ID", std::bind(button_callback, Events::BLOCKID_EV, "Block ID"));
+	/*displayWidget("Block ID", std::bind(button_callback, Events::BLOCKID_EV, "Block ID"));
 	ImGui::SameLine();
 	displayWidget("Previous ID", std::bind(button_callback, Events::PREVIOUS_BLOCKID_EV, "Previous ID"));
 	ImGui::SameLine();
 	displayWidget("nTx", std::bind(button_callback, Events::TXN_EV, "Number of transactions"));
 	ImGui::SameLine();
-	displayWidget("Block Number", std::bind(button_callback, Events::BLOCK_NUMBER_EV, "Block Number"));
+	displayWidget("Block Number", std::bind(button_callback, Events::BLOCK_NUMBER_EV, "Block Number"));*/
 	
 
-	displayWidget("Nonce", std::bind(button_callback, Events::NONCE_EV, "Nonce"));
-	ImGui::SameLine();
-	displayWidget("Calculate MR", std::bind(button_callback, Events::SEE_MROOT_EV, "Merkle Root calculation"));
+	/*displayWidget("Nonce", std::bind(button_callback, Events::NONCE_EV, "Nonce"));
+	ImGui::SameLine();*/
+	displayWidget("Calculate", std::bind(button_callback, Events::CALC_MROOT_EV, "Merkle Root calculation"));
 	ImGui::SameLine();
 	displayWidget("Validate MR", std::bind(button_callback, Events::VALIDATE_MROOT_EV, "Merkle Root validation"));
 	ImGui::SameLine();
@@ -379,13 +381,33 @@ void Gui::showBlocks(void)
 
 			[this, i, &checker]() 
 			{
-				if (checker) { index = i; state = States::BLOCK_OK; }
+				if (checker) 
+				{ 
+					index = i; 
+					state = States::BLOCK_OK; 
+					action = Events::BLOCK_SELECTED_EV;
+				}
 				else setAllFalse(States::FILE_OK);
 			});
 		ImGui::SameLine();
 	}
 	ImGui::NewLine();
 	ImGui::Text(("Selected Blok: Block  " + (index != data::notSelectedIndex ? std::to_string(index) : "none.")).c_str());
+}
+
+void Gui::showBlockInfo(void)
+{
+	ImGui::Text(("Selected Block ID: " + blockData.blockId).c_str());
+	ImGui::Text(("Selected Block Previous ID: " + blockData.previousBlockId).c_str());
+	ImGui::Text(("Selected Block Transaction count: " + blockData.TxN).c_str());
+	ImGui::Text(("Selected Block Number: " + blockData.blockNumber).c_str());
+	ImGui::Text(("Selected Block Nonce: " + blockData.nonce).c_str());
+	ImGui::Text(("Selected Block MekRoot (as in provided file): " + blockData.mkRoot).c_str());
+}
+
+void Gui::setBlockShownData(BlockShowData data)
+{
+	this->blockData = data;
 }
 
 /*Getters.*/

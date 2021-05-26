@@ -1,22 +1,22 @@
 #pragma once
-#include "Blocks/Block.h"
+#include "Blocks/Blockmicho.h"
 
 using json = nlohmann::json;
+using namespace std;
+
 class BlockChain
 {
 public:
 	BlockChain();
-	BlockChain(const std::string&);
+	~BlockChain();
+	BlockChain(const string&);
 
-	void loadBlockChain(const std::string& filename);
-
-	const std::string getBlockInfo(int index, const BlockInfo&);
-
-	const unsigned int getBlockAmount() const;
-
-	const std::string reprTree(unsigned int);
+	void loadBlockChain(const string& filename);
+	const string getBlockInfo(int id, const BlockInfo&);
+	const unsigned int getBlockAmount();
+	const string reprTree(unsigned int id);
 
 private:
-	std::vector <Block> blocks;
+	vector <BlockMicho> Blocks;
 	json JSON;
 };

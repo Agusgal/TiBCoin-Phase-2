@@ -42,6 +42,23 @@ void App::dispatcher(const Events& event)
 		break;
 	case Events::PRINT_TREE_EV:
 		gui->setInfoShower(blockChain.reprTree(gui->getBlockIndex()));
+		break;
+	case Events::BLOCK_SELECTED_EV:
+	{
+		string bId = blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::BLOCKID);
+		string pbId = blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::PREVIOUS_BLOCKID);
+		string TxN = blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::NTX);
+		string nonce = blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::NONCE);
+		string bNumber = blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::BLOCK_NUMBER);
+		string root = blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::SEE_MROOT);
+
+		BlockShowData data = { bId, pbId, TxN, bNumber, nonce, root};
+		gui->setBlockShownData(data);
+		break;
+	}
+	case Events::CALC_MROOT_EV:
+		gui->setInfoShower(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::CALCULATE_MROOT));
+		break;
 	default:
 		break;
 	}

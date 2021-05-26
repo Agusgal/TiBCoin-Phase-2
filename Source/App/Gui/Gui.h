@@ -19,7 +19,9 @@ const enum class Events:int
 	BLOCK_NUMBER_EV,
 	NONCE_EV,
 	NEW_FILE_EV,
-	PRINT_TREE_EV
+	PRINT_TREE_EV,
+	BLOCK_SELECTED_EV, 
+	CALC_MROOT_EV
 };
 
 
@@ -29,6 +31,16 @@ const enum class States
 	WAITING,
 	FILE_OK,
 	BLOCK_OK
+};
+
+struct BlockShowData
+{
+	std::string blockId;
+	std::string previousBlockId;
+	std::string TxN;
+	std::string blockNumber;
+	std::string nonce;
+	std::string mkRoot;
 };
 
 
@@ -47,6 +59,7 @@ public:
 	const std::string& getFilename(void);
 
 	void setInfoShower(const std::string&);
+	void setBlockShownData(BlockShowData);
 
 	void setChainLength(unsigned int);
 	void actionSolved(void);
@@ -67,6 +80,7 @@ private:
 
 	inline void showBlockchainMenu();
 	void showBlocks();
+	void showBlockInfo();
 
 
 	template <class Widget, class F1, class F2 = void(*)(void)>
@@ -108,5 +122,7 @@ private:
 	std::string fileNamePath;
 	unsigned int index;
 	/**********************************/
+
+	BlockShowData blockData;
 
 };

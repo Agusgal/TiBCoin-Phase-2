@@ -1,17 +1,29 @@
 #include "BlockChain.h"
 #include <fstream>
 
-BlockChain::BlockChain() {}
+using namespace std;
 
-BlockChain::BlockChain(const std::string& filename) {
+BlockChain::BlockChain()
+{
+
+}
+
+BlockChain::~BlockChain()
+{
+
+}
+
+BlockChain::BlockChain(const string& filename)
+{
 	loadBlockChain(filename);
 }
 
-void BlockChain::loadBlockChain(const std::string& filename) {
-	blocks.clear();
+void BlockChain::loadBlockChain(const string& filename)
+{
+	Blocks.clear();
 
 	/*Attempts to open file.*/
-	std::fstream jsonFile(filename, std::ios::in);
+	fstream jsonFile(filename, ios::in);
 
 	if (!jsonFile.is_open()) {
 		jsonFile.close();
@@ -25,15 +37,23 @@ void BlockChain::loadBlockChain(const std::string& filename) {
 
 	/*For every block in the blockChain...*/
 	for (auto& j : JSON)
-		blocks.push_back(Block(j));
+	{
+		Blocks.push_back(BlockMicho(j));
+	}
 }
 
-const unsigned int BlockChain::getBlockAmount() const { return blocks.size(); }
+const string BlockChain::getBlockInfo(int id, const BlockInfo& member) 
+{
+	return Blocks[id].getData(member);
+}
 
-const std::string BlockChain::reprTree(unsigned int index) {
-	return blocks[index].printTree();
+const unsigned int BlockChain::getBlockAmount() 
+{ 
+	return Blocks.size(); 
+}
+
+const string BlockChain::reprTree(unsigned int id) 
+{
+	return Blocks[id].printTree();
 };
 
-const std::string BlockChain::getBlockInfo(int index, const BlockInfo& member) {
-	return blocks[index].getData(member);
-}

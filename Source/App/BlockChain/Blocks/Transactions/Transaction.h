@@ -32,7 +32,7 @@ public:
 	void setNtxout(unsigned int nTxout_);
 	void setVin(Vin vin_);
 	void setVout(Vout vout_);
-	friend Merkle;
+	
 private:
 
 	string txid;
@@ -40,5 +40,6 @@ private:
 	unsigned int nTxout;
 	vector<Vin> vin;
 	vector<Vout> vout;
+	friend class Merkle;
 };
 
