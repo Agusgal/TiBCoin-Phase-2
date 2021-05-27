@@ -4,7 +4,7 @@
 
 using namespace std;
 
-//CONSTRUCTOR Y DESTRUCTOR
+//Constructor and Destructor
 BlockMicho::BlockMicho()
 {
 
@@ -12,8 +12,8 @@ BlockMicho::BlockMicho()
 
 BlockMicho::~BlockMicho()
 {
-
-}
+	int a = 1
+};
 
 BlockMicho::BlockMicho(const json& block)
 {
