@@ -9,35 +9,33 @@
 #include <allegro5/allegro_primitives.h>
 #include <functional>
 
-/*GUI data.*/
-/***************************************/
+/*Namespace with Gui Config Data.*/
 namespace data 
 {
 	const unsigned int width = 1200;
 	const unsigned int height = 650;
 
-	const char* fixedFormat = ".json";
 	int notSelectedIndex = -1;
 }
-/***************************************/
 
+/*Constructor*/
 Gui::Gui(void) :
-	guiDisp(nullptr),
+	guiDisplay(nullptr),
 	guiQueue(nullptr),
-	event(Events::NONE),
-	force(true),
+	event(Events::NO_EV),
 	state(States::INIT),
-	actionMsg("none."),
+	actionMsg("None."),
 	index(data::notSelectedIndex),
 	chainLength(0)
 {
-	blockData = {"", "", "", "", ""};
+	blockData = {"", "", "", "", "", ""};
+	firstUpdate = false;
 	initAllegro();
 }
 
 
 /*Initializes Allegro resources and throws different
-messages in case of different errors.*/
+messages in case of diverse errors.*/
 void Gui::initAllegro()
 {
 	/*Initializes Allegro resources.*/
@@ -56,14 +54,14 @@ void Gui::initAllegro()
 	else if (!(guiQueue = al_create_event_queue()))
 		throw std::exception("Failed to create event queue.");
 
-	else if (!(guiDisp = al_create_display(data::width, data::height)))
+	else if (!(guiDisplay = al_create_display(data::width, data::height)))
 		throw std::exception("Failed to create display.");
 
 	else 
 	{
 		al_register_event_source(guiQueue, al_get_keyboard_event_source());
 		al_register_event_source(guiQueue, al_get_mouse_event_source());
-		al_register_event_source(guiQueue, al_get_display_event_source(guiDisp));
+		al_register_event_source(guiQueue, al_get_display_event_source(guiDisplay));
 
 		initialImGuiSetup();
 	}
@@ -73,7 +71,7 @@ void Gui::initAllegro()
 //Set up for GUI with ImGUI.
 void Gui::initialImGuiSetup(void) const 
 {
-	al_set_target_backbuffer(guiDisp);
+	al_set_target_backbuffer(guiDisplay);
 
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -86,7 +84,7 @@ void Gui::initialImGuiSetup(void) const
 	ImGui::StyleColorsLight();
 
 	// Setup Platform/Renderer bindings
-	ImGui_ImplAllegro5_Init(guiDisp);
+	ImGui_ImplAllegro5_Init(guiDisplay);
 
 	//Sets screen to black.
 	al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -94,7 +92,7 @@ void Gui::initialImGuiSetup(void) const
 
 /*Checks if user pressed ESC or closed display.
 Manages allegro events in that regard.*/
-/*Return true if user exits, flase otehrwise.*/
+/*Return true if user exits, false otehrwise.*/
 bool Gui::windowEvents(void)
 {
 	bool result = false;
@@ -113,7 +111,7 @@ bool Gui::windowEvents(void)
 		else if (guiEvent.type == ALLEGRO_EVENT_DISPLAY_RESIZE)
 		{
 			ImGui_ImplAllegro5_InvalidateDeviceObjects();
-			al_acknowledge_resize(guiDisp);
+			al_acknowledge_resize(guiDisplay);
 			ImGui_ImplAllegro5_CreateDeviceObjects();
 		}
 	}
@@ -122,14 +120,14 @@ bool Gui::windowEvents(void)
 
 const Events Gui::checkForEvent(void)
 {
-	Events result = Events::NONE;
+	Events out = Events::NO_EV;
 
-	al_set_target_backbuffer(guiDisp);
+	al_set_target_backbuffer(guiDisplay);
 
 	//If user pressed ESC or closed display, returns Events::END.
 	if (windowEvents())
 	{
-		result = Events::END_EV;
+		out = Events::END_EV;
 	}
 	else
 	{
@@ -142,6 +140,13 @@ const Events Gui::checkForEvent(void)
 			window_flags |= ImGuiWindowFlags_MenuBar;
 			ImGui::BeginChild("ChildL", ImVec2(data::width * 0.5f, data::height), true, window_flags);
 			
+
+			if (firstUpdate)
+			{
+				event = Events::FIRST_UPDATE_EV;
+				firstUpdate = false;
+			}
+
 			if (ImGui::BeginMenuBar())
 			{
 				if (ImGui::BeginMenu("File System"))
@@ -155,14 +160,15 @@ const Events Gui::checkForEvent(void)
 			fileDialog();
 			
 
-			/*If it's not the first run after update...*/
+			/*If it's not the first run shows file.*/
 			if (state > States::INIT)
 			{
-				/*Shows files from path.*/
+				/*Shows files from filename path.*/
 				if (showFile())
 				{
-					result = Events::NEW_FILE_EV;
+					out = Events::NEW_FILE_EV;
 					state = States::FILE_OK;
+					firstUpdate = true;
 				};
 			}
 
@@ -187,15 +193,13 @@ const Events Gui::checkForEvent(void)
 			}
 
 
-
-			/*If file was correctly loaded:*/
+			/*If file was correctly loaded we show the blockchain blocks.*/
 			if (state > States::WAITING)
 			{
-				/*Shows blocks in BlockChain.*/
 				showBlocks();
 			}
 
-			/*If block was selected*/
+			/*If block was selected we show block info.*/
 			if (state > States::FILE_OK)
 			{
 				ImGui::NewLine();
@@ -207,15 +211,14 @@ const Events Gui::checkForEvent(void)
 				showBlockchainMenu();
 				ImGui::NewLine(); ImGui::NewLine();
 
-				/*If an action has been selected...*/
+				/*If an action has been selected we print result.*/
 				if (index != data::notSelectedIndex)
 				{
-					/*Shows result of action applied to block.*/
 					ImGui::Text("Result: ");
 					ImGui::NewLine();
 					ImGui::Text(resultMsg.c_str());
 					ImGui::NewLine();
-					result = event;
+					out = event;
 				}
 			}
 			ImGui::EndChild();
@@ -224,31 +227,25 @@ const Events Gui::checkForEvent(void)
 	ImGui::NewLine();
 
 	/*Exit button.*/
-	displayWidget("Exit", [&result]() {result = Events::END_EV; });
+	displayWidget("Exit", [&out]() {out = Events::END_EV; });
 
 	ImGui::SameLine();
 
 	ImGui::End();
 
 	/*Rendering.*/
-	render();
+	renderScreen();
 	
-	
-	return result;
-}
-
-void Gui::actionSolved(void) 
-{ 
-	event = Events::NONE; 
+	return out;
 }
 
 
 /*Shows Blockchain manipulation menu*/
-inline void Gui::showBlockchainMenu()
+void Gui::showBlockchainMenu()
 {
 	ImGui::Text("Select an option: ");
 
-	/*Button callback for both buttons.*/
+	/*Button callback for both buttons(uses wrappers).*/
 	const auto button_callback = [this](const Events eventId, const char* msg) 
 	{
 		event = eventId;
@@ -266,7 +263,7 @@ inline void Gui::showBlockchainMenu()
 	ImGui::Text(("Selected: " + actionMsg).c_str());
 }
 
-inline void Gui::fileDialog()
+void Gui::fileDialog()
 {
 	// open Dialog Simple
 	if (ImGui::Button("Open File Dialog", ImVec2(data::width/2 - 3, 40)))
@@ -310,7 +307,6 @@ inline void Gui::fileDialog()
 
 
 
-
 bool Gui::showFile()
 {
 	bool result = false;
@@ -349,7 +345,7 @@ inline void Gui::prepareNewWindow() const
 }
 
 /*Rendering.*/
-inline void Gui::render() const 
+inline void Gui::renderScreen() const 
 {
 	ImGui::Render();
 	al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -363,7 +359,7 @@ void Gui::showBlocks(void)
 {
 	ImGui::Text("Select a Block: ");
 	
-	bool checker;
+	bool checker = true;
 	for (unsigned int i = 0; i < chainLength; i++) 
 	{
 		checker = (index == i);
@@ -416,7 +412,7 @@ void Gui::setChainLength(unsigned int chainLength)
 	this->chainLength = chainLength; 
 }
 
-void Gui::setInfoShower(const std::string& shower) 
+void Gui::setResultMsg(const std::string& shower) 
 { 
 	this->resultMsg = shower; 
 }
@@ -429,19 +425,18 @@ Gui::~Gui()
 	ImGui::DestroyContext();
 	if (guiQueue)
 		al_destroy_event_queue(guiQueue);
-	if (guiDisp)
-		al_destroy_display(guiDisp);
+	if (guiDisplay)
+		al_destroy_display(guiDisplay);
 }
 
 
-inline void Gui::setAllFalse(const States& revert, bool alsoFile) {
-	event = Events::NONE;
+inline void Gui::setAllFalse(const States& revert) 
+{
+	event = Events::NO_EV;
 	index = data::notSelectedIndex;
 	state = revert;
 	resultMsg = "";
 	actionMsg = "none.";
-	if (alsoFile)
-		selected = "";
 }
 
 
@@ -454,9 +449,7 @@ inline auto Gui::displayWidget(const Widget& widget, const F1& f1, const F2& f2)
 	return f2();
 }
 
-/*Specialization of displayWidget template.
-As ImGui::Button is the most used widget, when the given 'widget'
-is actually a const char*, then the widget will be ImGui::Button.*/
+/*Specialization of displayWidget template.*/
 template <class F1, class F2>
 inline auto Gui::displayWidget(const char* txt, const F1& f1, const F2& f2)->decltype(f1()) 
 {

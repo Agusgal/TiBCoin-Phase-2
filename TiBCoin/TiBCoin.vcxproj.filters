@@ -87,9 +87,6 @@
     <ClCompile Include="..\Lib\ImGuiFileDialog\ImGuiFileDialog.cpp">
       <Filter>Lib\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\App\BlockChain\Blocks\Block.cpp">
-      <Filter>Source Files\App\BlockChain\Blocks</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\App\BlockChain\BlockChain.cpp">
       <Filter>Source Files\App\BlockChain</Filter>
     </ClCompile>
@@ -145,9 +142,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\App\BlockChain\BlockChain.h">
       <Filter>Header Files\App\Blockchain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\App\BlockChain\Blocks\Block.h">
-      <Filter>Header Files\App\Blockchain\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\App\BlockChain\Blocks\Blockmicho.h">
       <Filter>Header Files\App\Blockchain\Blocks</Filter>

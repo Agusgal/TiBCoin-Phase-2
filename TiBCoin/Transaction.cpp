@@ -5,7 +5,7 @@
 
 using namespace std;
 
-//CONSTRUCTOR Y DESTRUCTOR
+//Constructor and Destructor
 Transaction::Transaction()
 {
 

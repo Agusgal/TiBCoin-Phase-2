@@ -22,21 +22,20 @@ void BlockChain::loadBlockChain(const string& filename)
 {
 	Blocks.clear();
 
-	/*Attempts to open file.*/
 	fstream jsonFile(filename, ios::in);
 
-	if (!jsonFile.is_open()) {
+	if (!jsonFile.is_open()) 
+	{
 		jsonFile.close();
-		throw std::exception("Failed to open file.");
+		throw std::exception("Failed to open file!");
 	}
 
-	/*Parses file input.*/
-	JSON = json::parse(jsonFile);
+	jsonObj = json::parse(jsonFile);
 
 	jsonFile.close();
 
-	/*For every block in the blockChain...*/
-	for (auto& j : JSON)
+	/*We cerate a block for every json object.*/
+	for (auto& j : jsonObj)
 	{
 		Blocks.push_back(BlockMicho(j));
 	}
@@ -47,12 +46,12 @@ const string BlockChain::getBlockInfo(int id, const BlockInfo& member)
 	return Blocks[id].getData(member);
 }
 
-const unsigned int BlockChain::getBlockAmount() 
+const unsigned int BlockChain::getBlockQuantity() 
 { 
 	return Blocks.size(); 
 }
 
-const string BlockChain::reprTree(unsigned int id) 
+const string BlockChain::drawTree(unsigned int id) 
 {
 	return Blocks[id].printTree();
 };

@@ -13,10 +13,10 @@ public:
 
 	void loadBlockChain(const string& filename);
 	const string getBlockInfo(int id, const BlockInfo&);
-	const unsigned int getBlockAmount();
-	const string reprTree(unsigned int id);
+	const unsigned int getBlockQuantity();
+	const string drawTree(unsigned int id);
 
 private:
 	vector <BlockMicho> Blocks;
-	json JSON;
+	json jsonObj;
 };

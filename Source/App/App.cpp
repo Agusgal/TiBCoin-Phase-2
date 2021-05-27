@@ -11,44 +11,27 @@ void App::dispatcher(const Events& event)
 {
 	switch (event)
 	{
-		/*User exit.*/
 	case Events::END_EV:
 		running = false;
 		break;
 	case Events::NEW_FILE_EV:
 		blockChain.loadBlockChain(gui->getFilename());
-		gui->setChainLength(blockChain.getBlockAmount());
-		//updateGuiBlockData();
+		gui->setChainLength(blockChain.getBlockQuantity());
 		break;
-	case Events::BLOCKID_EV:
-		gui->setInfoShower(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::BLOCKID));
-		break;
-	case Events::SEE_MROOT_EV:
-		gui->setInfoShower(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::SEE_MROOT));
-		break;
-	case Events::PREVIOUS_BLOCKID_EV:
-		gui->setInfoShower(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::PREVIOUS_BLOCKID));
-		break;
-	case Events::NONCE_EV:
-		gui->setInfoShower(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::NONCE));
-		break;
-	case Events::TXN_EV:
-		gui->setInfoShower(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::NTX));
-		break;
-	case Events::BLOCK_NUMBER_EV:
-		gui->setInfoShower(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::BLOCK_NUMBER));
+	case Events::FIRST_UPDATE_EV:
+		updateGuiBlockData();
 		break;
 	case Events::VALIDATE_MROOT_EV:
 		updateGuiBlockData();
-		gui->setInfoShower(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::VALIDATE_MROOT));
+		gui->setResultMsg(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::VALIDATE_MROOT));
 		break;
 	case Events::PRINT_TREE_EV:
 		updateGuiBlockData();
-		gui->setInfoShower(blockChain.reprTree(gui->getBlockIndex()));
+		gui->setResultMsg(blockChain.drawTree(gui->getBlockIndex()));
 		break;
 	case Events::CALC_MROOT_EV:
 		updateGuiBlockData();
-		gui->setInfoShower(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::CALCULATE_MROOT));
+		gui->setResultMsg(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::CALCULATE_MROOT));
 		break;
 	default:
 		break;

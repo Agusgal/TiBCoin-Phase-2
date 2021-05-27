@@ -4,23 +4,17 @@
 #include <vector>
 
 
-
 /*Gui event codes.*/
 const enum class Events:int 
 {
-	NONE = 0,
+	NO_EV = 0,
 	END_EV,
-	SEE_MROOT_EV,
 	VALIDATE_MROOT_EV,
 	ALL_MERKLE_EV,
-	BLOCKID_EV,
-	PREVIOUS_BLOCKID_EV,
-	TXN_EV,
-	BLOCK_NUMBER_EV,
-	NONCE_EV,
 	NEW_FILE_EV,
 	PRINT_TREE_EV,
-	CALC_MROOT_EV
+	CALC_MROOT_EV,
+	FIRST_UPDATE_EV
 };
 
 
@@ -32,6 +26,7 @@ const enum class States
 	BLOCK_OK
 };
 
+
 struct BlockShowData
 {
 	std::string blockId;
@@ -41,7 +36,6 @@ struct BlockShowData
 	std::string nonce;
 	std::string mkRoot;
 };
-
 
 
 class Gui 
@@ -57,11 +51,10 @@ public:
 
 	const std::string& getFilename(void);
 
-	void setInfoShower(const std::string&);
+	void setResultMsg(const std::string&);
 	void setBlockShownData(BlockShowData);
 
 	void setChainLength(unsigned int);
-	void actionSolved(void);
 
 private:
 	
@@ -72,17 +65,16 @@ private:
 	
 
 	/*Window displayers.*/
-	/*************************************************************************************************/
-	inline void prepareNewWindow() const;
-	inline void fileDialog();
+	void prepareNewWindow() const;
+	void fileDialog();
 	bool showFile();
 
 	inline void showBlockchainMenu();
 	void showBlocks();
 	void showBlockInfo();
-	void showBlockInfoButton();
 
 
+	/*This methods are wrappers to display different imgui widgets*/
 	template <class Widget, class F1, class F2 = void(*)(void)>
 	inline auto displayWidget(const Widget&, const F1& f1, const F2 & = []() {}) -> decltype(f1());
 
@@ -90,39 +82,33 @@ private:
 	template <class F1, class F2 = void(*)(void)>
 	inline auto displayWidget(const char*, const F1& f1, const F2 & = []() {})->decltype(f1());
 
-	inline void render() const;
-	inline void setAllFalse(const States&, bool = false);
-	/*************************************************************************************************/
+	inline void renderScreen() const;
+	inline void setAllFalse(const States&);
+
 
 	/*Exit and resize events.*/
 	bool windowEvents(void);
 
 
 	/*Allegro data members.*/
-	/******************************/
-	ALLEGRO_DISPLAY* guiDisp;
+	ALLEGRO_DISPLAY* guiDisplay;
 	ALLEGRO_EVENT_QUEUE* guiQueue;
 	ALLEGRO_EVENT guiEvent;
-	/******************************/
 
 	/*Flag data members.*/
-	/******************************/
-	bool force;
 	unsigned int chainLength;
 	std::string actionMsg, resultMsg;
 	Events event;
 	States state;
-	/******************************/
 
 	/*Data members modifiable by user.*/
-	/**********************************/
 	std::string path, selected;
 	std::string filePath;
 	std::string filename;
 	std::string fileNamePath;
 	unsigned int index;
-	/**********************************/
 
+	/*Misc.*/
 	BlockShowData blockData;
-
+	bool firstUpdate;
 };

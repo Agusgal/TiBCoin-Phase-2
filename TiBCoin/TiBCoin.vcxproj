@@ -149,7 +149,6 @@
     <ClCompile Include="..\Lib\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\Source\App\App.cpp" />
     <ClCompile Include="..\Source\App\BlockChain\BlockChain.cpp" />
-    <ClCompile Include="..\Source\App\BlockChain\Blocks\Block.cpp" />
     <ClCompile Include="..\Source\App\BlockChain\Blocks\Blockmicho.cpp" />
     <ClCompile Include="..\Source\App\BlockChain\Blocks\Merkle.cpp" />
     <ClCompile Include="..\Source\App\Gui\Gui.cpp" />
@@ -169,7 +168,6 @@
     <ClInclude Include="..\Lib\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\Source\App\App.h" />
     <ClInclude Include="..\Source\App\BlockChain\BlockChain.h" />
-    <ClInclude Include="..\Source\App\BlockChain\Blocks\Block.h" />
     <ClInclude Include="..\Source\App\BlockChain\Blocks\Blockmicho.h" />
     <ClInclude Include="..\Source\App\BlockChain\Blocks\json.hpp" />
     <ClInclude Include="..\Source\App\BlockChain\Blocks\Merkle.h" />
