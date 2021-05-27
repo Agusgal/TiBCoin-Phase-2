@@ -12,7 +12,7 @@ BlockMicho::BlockMicho()
 
 BlockMicho::~BlockMicho()
 {
-	int a = 1
+
 };
 
 BlockMicho::BlockMicho(const json& block)
