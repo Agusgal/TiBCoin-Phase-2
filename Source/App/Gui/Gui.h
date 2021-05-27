@@ -20,7 +20,6 @@ const enum class Events:int
 	NONCE_EV,
 	NEW_FILE_EV,
 	PRINT_TREE_EV,
-	BLOCK_SELECTED_EV, 
 	CALC_MROOT_EV
 };
 
@@ -81,6 +80,7 @@ private:
 	inline void showBlockchainMenu();
 	void showBlocks();
 	void showBlockInfo();
+	void showBlockInfoButton();
 
 
 	template <class Widget, class F1, class F2 = void(*)(void)>
@@ -109,8 +109,8 @@ private:
 	/******************************/
 	bool force;
 	unsigned int chainLength;
-	std::string action_msg, shower;
-	Events action;
+	std::string actionMsg, resultMsg;
+	Events event;
 	States state;
 	/******************************/
 

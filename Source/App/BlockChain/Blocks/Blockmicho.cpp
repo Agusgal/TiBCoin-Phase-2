@@ -225,7 +225,7 @@ std::string BlockMicho::printTree(void) {
 		result.append("\n\n");
 	}
 
-	return result;
+	return fliptree(result);
 }
 
 

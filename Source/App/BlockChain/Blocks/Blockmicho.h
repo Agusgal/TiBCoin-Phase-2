@@ -42,6 +42,7 @@ public:
 
 private:
 	string fliptree(string str);
+	
 	string getBlockid(void);
 	unsigned int getHeight(void);
 	string getMerkleRoot(void);

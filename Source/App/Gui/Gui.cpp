@@ -24,10 +24,10 @@ namespace data
 Gui::Gui(void) :
 	guiDisp(nullptr),
 	guiQueue(nullptr),
-	action(Events::NONE),
+	event(Events::NONE),
 	force(true),
 	state(States::INIT),
-	action_msg("none."),
+	actionMsg("none."),
 	index(data::notSelectedIndex),
 	chainLength(0)
 {
@@ -213,9 +213,9 @@ const Events Gui::checkForEvent(void)
 					/*Shows result of action applied to block.*/
 					ImGui::Text("Result: ");
 					ImGui::NewLine();
-					ImGui::Text(shower.c_str());
+					ImGui::Text(resultMsg.c_str());
 					ImGui::NewLine();
-					result = action;
+					result = event;
 				}
 			}
 			ImGui::EndChild();
@@ -239,7 +239,7 @@ const Events Gui::checkForEvent(void)
 
 void Gui::actionSolved(void) 
 { 
-	action = Events::NONE; 
+	event = Events::NONE; 
 }
 
 
@@ -251,30 +251,19 @@ inline void Gui::showBlockchainMenu()
 	/*Button callback for both buttons.*/
 	const auto button_callback = [this](const Events eventId, const char* msg) 
 	{
-		action = eventId;
-		action_msg = msg;
+		event = eventId;
+		actionMsg = msg;
 	};
 
 	/*Creates buttons for different functionalities.*/
-	/*displayWidget("Block ID", std::bind(button_callback, Events::BLOCKID_EV, "Block ID"));
+	displayWidget("Calculate", std::bind(button_callback, Events::CALC_MROOT_EV, "Merkle Root calculation."));
 	ImGui::SameLine();
-	displayWidget("Previous ID", std::bind(button_callback, Events::PREVIOUS_BLOCKID_EV, "Previous ID"));
+	displayWidget("Validate MR", std::bind(button_callback, Events::VALIDATE_MROOT_EV, "Merkle Root validation."));
 	ImGui::SameLine();
-	displayWidget("nTx", std::bind(button_callback, Events::TXN_EV, "Number of transactions"));
-	ImGui::SameLine();
-	displayWidget("Block Number", std::bind(button_callback, Events::BLOCK_NUMBER_EV, "Block Number"));*/
-	
-
-	/*displayWidget("Nonce", std::bind(button_callback, Events::NONCE_EV, "Nonce"));
-	ImGui::SameLine();*/
-	displayWidget("Calculate", std::bind(button_callback, Events::CALC_MROOT_EV, "Merkle Root calculation"));
-	ImGui::SameLine();
-	displayWidget("Validate MR", std::bind(button_callback, Events::VALIDATE_MROOT_EV, "Merkle Root validation"));
-	ImGui::SameLine();
-	displayWidget("Print tree", std::bind(button_callback, Events::PRINT_TREE_EV, "Tree printing"));
+	displayWidget("Print tree", std::bind(button_callback, Events::PRINT_TREE_EV, "Tree printing."));
 
 	/*Message with selected option.*/
-	ImGui::Text(("Selected: " + action_msg).c_str());
+	ImGui::Text(("Selected: " + actionMsg).c_str());
 }
 
 inline void Gui::fileDialog()
@@ -312,13 +301,14 @@ inline void Gui::fileDialog()
 
 			state = States::WAITING;
 			path = filePathName;
-			//falta pasar a estado init
 		}
 
 		// close
 		ImGuiFileDialog::Instance()->Close();
 	}
 }
+
+
 
 
 bool Gui::showFile()
@@ -384,15 +374,14 @@ void Gui::showBlocks(void)
 				if (checker) 
 				{ 
 					index = i; 
-					state = States::BLOCK_OK; 
-					action = Events::BLOCK_SELECTED_EV;
+					state = States::BLOCK_OK;
 				}
 				else setAllFalse(States::FILE_OK);
 			});
 		ImGui::SameLine();
 	}
 	ImGui::NewLine();
-	ImGui::Text(("Selected Blok: Block  " + (index != data::notSelectedIndex ? std::to_string(index) : "none.")).c_str());
+	ImGui::Text(("Selected Block: Block  " + (index != data::notSelectedIndex ? std::to_string(index) : "none.")).c_str());
 }
 
 void Gui::showBlockInfo(void)
@@ -429,7 +418,7 @@ void Gui::setChainLength(unsigned int chainLength)
 
 void Gui::setInfoShower(const std::string& shower) 
 { 
-	this->shower = shower; 
+	this->resultMsg = shower; 
 }
 
 
@@ -446,11 +435,11 @@ Gui::~Gui()
 
 
 inline void Gui::setAllFalse(const States& revert, bool alsoFile) {
-	action = Events::NONE;
+	event = Events::NONE;
 	index = data::notSelectedIndex;
 	state = revert;
-	shower = "";
-	action_msg = "none.";
+	resultMsg = "";
+	actionMsg = "none.";
 	if (alsoFile)
 		selected = "";
 }

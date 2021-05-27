@@ -19,6 +19,8 @@ private:
 	/*Prevents from using copy constructor.*/
 	App(const App&);
 	
+	void updateGuiBlockData();
+
 	BlockChain blockChain;
 
 	Gui* gui;
