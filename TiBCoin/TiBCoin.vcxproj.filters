@@ -49,6 +49,18 @@
     <Filter Include="Header Files\App\Blockchain\Blocks\Transactions">
       <UniqueIdentifier>{05b6c7ae-73f9-4ec3-a34c-2cdf81bd2670}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\App\Server">
+      <UniqueIdentifier>{48eb0b35-df4a-4e30-8e87-f2f1114a64d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\App\Client">
+      <UniqueIdentifier>{3179672c-41c1-4515-969f-b2435a82727d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\App\Server">
+      <UniqueIdentifier>{99451acd-2601-4600-9480-8916b0d06192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\App\Client">
+      <UniqueIdentifier>{eecc74e5-074c-4d60-8239-01d9fb6fed3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\App\Gui\Gui.cpp">
@@ -95,6 +107,15 @@
     </ClCompile>
     <ClCompile Include="..\Source\App\BlockChain\Blocks\Merkle.cpp">
       <Filter>Source Files\App\BlockChain\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\BlockChain\Nodes\Node.cpp">
+      <Filter>Source Files\App\BlockChain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\Server\Server.cpp">
+      <Filter>Source Files\App\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\Client\Client.cpp">
+      <Filter>Source Files\App\Client</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +169,15 @@
     </ClInclude>
     <ClInclude Include="..\Source\App\BlockChain\Blocks\Merkle.h">
       <Filter>Header Files\App\Blockchain\Blocks\Transactions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\BlockChain\Nodes\Node.h">
+      <Filter>Header Files\App\Blockchain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Client\Client.h">
+      <Filter>Header Files\App\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Server\Server.h">
+      <Filter>Header Files\App\Server</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
