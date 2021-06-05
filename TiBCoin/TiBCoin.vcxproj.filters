@@ -31,9 +31,6 @@
     <Filter Include="Lib\Imgui">
       <UniqueIdentifier>{5663eea5-9ea7-453c-825b-f001207fb7d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lib\ImGuiFileDialog">
-      <UniqueIdentifier>{44762517-31a3-4f5d-b376-d1372efd112c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\App\BlockChain">
       <UniqueIdentifier>{b677f9e4-3d58-4b81-b84c-c3f69e58f0d6}</UniqueIdentifier>
     </Filter>
