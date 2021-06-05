@@ -93,7 +93,7 @@
     <ClCompile Include="Transaction.cpp">
       <Filter>Source Files\App\BlockChain\Blocks\Transactions</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\App\BlockChain\Blocks\Blockmicho.cpp">
+    <ClCompile Include="..\Source\App\BlockChain\Blocks\Block.cpp">
       <Filter>Source Files\App\BlockChain\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\App\BlockChain\Blocks\Merkle.cpp">
@@ -143,7 +143,7 @@
     <ClInclude Include="..\Source\App\BlockChain\BlockChain.h">
       <Filter>Header Files\App\Blockchain</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\App\BlockChain\Blocks\Blockmicho.h">
+    <ClInclude Include="..\Source\App\BlockChain\Blocks\Block.h">
       <Filter>Header Files\App\Blockchain\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\App\BlockChain\Blocks\Transactions\Transaction.h">
