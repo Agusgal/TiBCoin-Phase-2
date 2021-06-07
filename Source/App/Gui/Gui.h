@@ -14,7 +14,10 @@ const enum class Events:int
 	NEW_FILE_EV,
 	PRINT_TREE_EV,
 	CALC_MROOT_EV,
-	FIRST_UPDATE_EV
+	FIRST_UPDATE_EV,
+	NODES_CREATED_EV,
+	SENDERNODE_SELECTED_EV,
+	RECIEVERNODE_SELECTED_EV
 };
 
 
@@ -23,7 +26,8 @@ const enum class States
 	INIT = 0,
 	WAITING,
 	FILE_OK,
-	BLOCK_OK
+	BLOCK_OK,
+	INIT_DONE
 };
 
 
@@ -37,6 +41,34 @@ struct BlockShowData
 	std::string mkRoot;
 };
 
+const enum class Mode
+{
+	NONE = 0,
+	ONE,
+	TWO
+};
+
+/*Some Node types*/
+const enum class NodeTypes {
+	NEW_SVP,
+	NEW_FULL,
+};
+
+/*Node struct that holds new node info that then gets parsed to App when we get to the action screen.*/
+struct NewNode 
+{
+	/*Constructor.*/
+	NewNode(const NodeTypes type, const unsigned int index, std::string ip, int port) : type(type), index(index), ip(ip), port(port)
+	{ 
+	}
+
+	/*Data*/
+	NodeTypes type;
+	unsigned int index;
+	std::string ip;
+	int port;
+	std::vector<unsigned int> neighbors; //has indexes of neighbor nodes
+};
 
 class Gui 
 {
@@ -63,6 +95,14 @@ private:
 	void initAllegro();
 	void initialImGuiSetup(void) const;
 	
+
+	/*Gui Mode*/
+
+	Mode mode;
+	void modeSelector(void);
+	void phaseOneMode(Events &out);
+	void phaseTwoMode(Events &out);
+
 
 	/*Window displayers.*/
 	void prepareNewWindow() const;
@@ -107,8 +147,38 @@ private:
 	std::string filename;
 	std::string fileNamePath;
 	unsigned int index;
+	
+	/*Phase Two*/
+	std::vector<std::string> nodeIds;
+
+
+	void createNewNode(void);
+	void validateNeighbors(bool &openPopup);
+	void nodeInitialization(Events& out);
+	void nodeActions(Events& out);
+
+	std::string ip;
+	int port;
+	int nodeType;
+
+	std::vector<bool> nodeSelection;
+	std::vector <NewNode> nodes;
+	std::vector <NewNode> receiverNodes;
+	std::vector <NewNode> availableActions;//cambiar por action u otra cosa
+
+	int selectedSenderId;
+	int selectedActionId;
+
+	bool showTranferMenu;
+
+	int coinN;
+	std::string publicKey;
+
+	void resetNodeSelection(void);
 
 	/*Misc.*/
 	BlockShowData blockData;
 	bool firstUpdate;
+	void popup(const char* msg);
+	std::string popupmsg;
 };

@@ -30,6 +30,18 @@ Gui::Gui(void) :
 {
 	blockData = {"", "", "", "", "", ""};
 	firstUpdate = false;
+	mode = Mode::NONE;
+
+	ip = "";
+	port = 0;
+	nodeType = 0;
+	popupmsg = "";
+	selectedSenderId = 0;
+	selectedActionId = 0;
+	showTranferMenu = false;
+	coinN = 0;
+	publicKey = "";
+
 	initAllegro();
 }
 
@@ -133,95 +145,20 @@ const Events Gui::checkForEvent(void)
 	{
 		/*Sets new ImGui window.*/
 		prepareNewWindow();
-
-		//Child 1
-		{
-			ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
-			window_flags |= ImGuiWindowFlags_MenuBar;
-			ImGui::BeginChild("ChildL", ImVec2(data::width * 0.5f, data::height), true, window_flags);
-			
-
-			if (firstUpdate)
-			{
-				event = Events::FIRST_UPDATE_EV;
-				firstUpdate = false;
-			}
-
-			if (ImGui::BeginMenuBar())
-			{
-				if (ImGui::BeginMenu("File System"))
-				{
-					ImGui::EndMenu();
-				}
-				ImGui::EndMenuBar();
-			}
-			
-			/*Custom file Dialog for loading json files.*/
-			fileDialog();
-			
-
-			/*If it's not the first run shows file.*/
-			if (state > States::INIT)
-			{
-				/*Shows files from filename path.*/
-				if (showFile())
-				{
-					out = Events::NEW_FILE_EV;
-					state = States::FILE_OK;
-					firstUpdate = true;
-				};
-			}
-
-			ImGui::EndChild();
-		}
 		
-		ImGui::SameLine(); //Sameline to stack horizontally
-		//Child 2
+		switch (mode)
 		{
-			ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
-			window_flags |= ImGuiWindowFlags_MenuBar;
-			window_flags |= ImGuiWindowFlags_HorizontalScrollbar;
-			
-			ImGui::BeginChild("ChildR", ImVec2(0, data::height), true, window_flags);
-			if (ImGui::BeginMenuBar())
-			{
-				if (ImGui::BeginMenu("BlockChain Explorer"))
-				{
-					ImGui::EndMenu();
-				}
-				ImGui::EndMenuBar();
-			}
-
-
-			/*If file was correctly loaded we show the blockchain blocks.*/
-			if (state > States::WAITING)
-			{
-				showBlocks();
-			}
-
-			/*If block was selected we show block info.*/
-			if (state > States::FILE_OK)
-			{
-				ImGui::NewLine();
-
-				showBlockInfo();
-
-				/*Shows actions to perform to a given block.*/
-				ImGui::NewLine();
-				showBlockchainMenu();
-				ImGui::NewLine(); ImGui::NewLine();
-
-				/*If an action has been selected we print result.*/
-				if (index != data::notSelectedIndex)
-				{
-					ImGui::Text("Result: ");
-					ImGui::NewLine();
-					ImGui::Text(resultMsg.c_str());
-					ImGui::NewLine();
-					out = event;
-				}
-			}
-			ImGui::EndChild();
+		case Mode::NONE:
+			modeSelector();
+			break;
+		case Mode::ONE:
+			phaseOneMode(out);
+			break;
+		case Mode::TWO:
+			phaseTwoMode(out);
+			break;
+		default:
+			break;
 		}
 	}
 	ImGui::NewLine();
@@ -237,6 +174,340 @@ const Events Gui::checkForEvent(void)
 	renderScreen();
 	
 	return out;
+}
+
+
+void Gui::modeSelector(void)
+{
+	if (ImGui::Button("Phase One Mode"))
+	{
+		mode = Mode::ONE;
+	}
+	else if (ImGui::Button("Phase Two Mode"))
+	{
+		mode = Mode::TWO;
+	}
+}
+
+/*App Mode Phase one*/
+void Gui::phaseOneMode(Events &out)
+{
+	//Child 1
+	{
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
+		window_flags |= ImGuiWindowFlags_MenuBar;
+		ImGui::BeginChild("ChildL", ImVec2(data::width * 0.5f, data::height), true, window_flags);
+
+
+		if (firstUpdate)
+		{
+			event = Events::FIRST_UPDATE_EV;
+			firstUpdate = false;
+		}
+
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("File System"))
+			{
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
+
+		/*Custom file Dialog for loading json files.*/
+		fileDialog();
+
+
+		/*If it's not the first run shows file.*/
+		if (state > States::INIT)
+		{
+			/*Shows files from filename path.*/
+			if (showFile())
+			{
+				out = Events::NEW_FILE_EV;
+				state = States::FILE_OK;
+				firstUpdate = true;
+			};
+		}
+
+		ImGui::EndChild();
+	}
+
+	ImGui::SameLine(); //Sameline to stack horizontally
+	//Child 2
+	{
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
+		window_flags |= ImGuiWindowFlags_MenuBar;
+		window_flags |= ImGuiWindowFlags_HorizontalScrollbar;
+
+		ImGui::BeginChild("ChildR", ImVec2(0, data::height), true, window_flags);
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("BlockChain Explorer"))
+			{
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
+
+
+		/*If file was correctly loaded we show the blockchain blocks.*/
+		if (state > States::WAITING)
+		{
+			showBlocks();
+		}
+
+		/*If block was selected we show block info.*/
+		if (state > States::FILE_OK)
+		{
+			ImGui::NewLine();
+
+			showBlockInfo();
+
+			/*Shows actions to perform to a given block.*/
+			ImGui::NewLine();
+			showBlockchainMenu();
+			ImGui::NewLine(); ImGui::NewLine();
+
+			/*If an action has been selected we print result.*/
+			if (index != data::notSelectedIndex)
+			{
+				ImGui::Text("Result: ");
+				ImGui::NewLine();
+				ImGui::Text(resultMsg.c_str());
+				ImGui::NewLine();
+				out = event;
+			}
+		}
+		ImGui::EndChild();
+	}
+}
+
+
+void Gui::phaseTwoMode(Events& out)
+{
+	
+	if (state == States::INIT)
+	{
+		nodeInitialization(out);
+	}
+	
+	if (state == States::INIT_DONE)
+	{
+		nodeActions(out);
+	}
+}
+
+
+void Gui::nodeInitialization(Events& out)
+{
+	ImGui::Text("Enter IP:   ", ImGuiInputTextFlags_CharsDecimal); ImGui::SameLine();
+	ImGui::InputText("IP Address", &ip);
+
+	ImGui::Text("Enter Port: "); ImGui::SameLine();
+	ImGui::InputInt("Port", &port, 1, 5, ImGuiInputTextFlags_CharsDecimal);
+
+
+	ImGui::RadioButton("Full", &nodeType, 0); ImGui::SameLine();
+	ImGui::RadioButton("SPV", &nodeType, 1);
+
+
+
+	if (ImGui::Button("Create new Node", ImVec2(200, 50)))
+	{
+		nodeSelection.push_back(false);//Appends new boolean value to select and assign nodes
+		createNewNode();
+		//out = Events::NEW_NODE_EV;
+	}
+
+	ImGui::NewLine(); ImGui::NewLine();
+
+
+	if (ImGui::BeginListBox("##Node List"))
+	{
+		for (int n = 0; n < nodes.size(); n++)
+		{
+			std::string type;
+			if (nodes[n].type == NodeTypes::NEW_FULL)
+			{
+				type = "Full";
+			}
+			else
+			{
+				type = "SPV";
+			}
+
+			std::string nIp = nodes[n].ip;
+			std::string nodeInfo = "Node " + std::to_string(nodes[n].index) + " - type: " + type + " - ip: " + nIp + " - port: " + std::to_string(nodes[n].port) + " - Neighbors: ";
+
+			for (int k = 0; k < nodes[n].neighbors.size(); k++)
+			{
+				nodeInfo += ("node" + std::to_string(nodes[n].neighbors[k]) + " ");
+			}
+
+			if (ImGui::Selectable(nodeInfo.c_str(), nodeSelection[n]))
+			{
+				auto trueCount = std::count(nodeSelection.begin(), nodeSelection.end(), true);
+
+				if (trueCount < 2)
+				{
+					nodeSelection[n] = nodeSelection[n] ^ 1;
+				}
+				else if (trueCount = 2 && nodeSelection[n])
+				{
+					nodeSelection[n] = nodeSelection[n] ^ 1;
+				}
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	bool openPopup = false;
+	ImGui::SameLine();
+	if (ImGui::Button("Make neighbors", ImVec2(200, 50)))
+	{
+		validateNeighbors(openPopup);
+	}
+
+	//if not enough nodes were selected a popup appears
+	if (ImGui::BeginPopup("control"))
+	{
+		ImGui::Text(popupmsg.c_str());
+		ImGui::EndPopup();
+		openPopup = false;
+	}
+
+	if (ImGui::Button("Ready Configuring Nodes: go to next window", ImVec2(350, 50)))
+	{
+		//have to check if everything is allright.
+		out = Events::NODES_CREATED_EV;
+		state = States::INIT_DONE;
+		resetNodeSelection();
+	}
+}
+
+void Gui::nodeActions(Events& out)
+{
+		
+	if (ImGui::BeginListBox("##Sender Node List"))
+	{
+		for (int n = 0; n < nodes.size(); n++)
+		{
+			std::string type;
+			if (nodes[n].type == NodeTypes::NEW_FULL)
+			{
+				type = "Full";
+			}
+			else
+			{
+				type = "SPV";
+			}
+			
+			std::string nIp = nodes[n].ip;
+			std::string nodeInfo = "Node " + std::to_string(nodes[n].index) + " - type: " + type + " - ip: " + nIp + " - port: " + std::to_string(nodes[n].port) + " - Neighbors: ";
+
+			for (int k = 0; k < nodes[n].neighbors.size(); k++)
+			{
+				nodeInfo += ("node" + std::to_string(nodes[n].neighbors[k]) + " ");
+			}
+
+			const bool is_selected = (selectedSenderId == n);
+			if (ImGui::Selectable(nodeInfo.c_str(), is_selected))
+			{
+				selectedSenderId = n;
+			}
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+	
+	ImGui::SameLine();
+	if (ImGui::Button("Select Sender Node", ImVec2(150, 40)))
+	{
+		out = Events::SENDERNODE_SELECTED_EV;
+	}
+
+	
+	if (ImGui::BeginListBox("##Receiver Node List"))
+	{
+		for (int n = 0; n < receiverNodes.size(); n++)
+		{
+			std::string type;
+			if (receiverNodes[n].type == NodeTypes::NEW_FULL)
+			{
+				type = "Full";
+			}
+			else
+			{
+				type = "SPV";
+			}
+
+			std::string nIp = receiverNodes[n].ip;
+			std::string nodeInfo = "Node " + std::to_string(receiverNodes[n].index) + " - type: " + type + " - ip: " + nIp + " - port: " + std::to_string(receiverNodes[n].port) + " - Neighbors: ";
+
+			for (int k = 0; k < receiverNodes[n].neighbors.size(); k++)
+			{
+				nodeInfo += ("node" + std::to_string(receiverNodes[n].neighbors[k]) + " ");
+			}
+
+			const bool is_selected = (selectedSenderId == n);
+			if (ImGui::Selectable(nodeInfo.c_str(), is_selected))
+			{
+				selectedSenderId = n;
+			}
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Select Receiver Node", ImVec2(150, 40)))
+	{
+		out = Events::RECIEVERNODE_SELECTED_EV;
+	}
+
+
+	ImGui::NewLine(); ImGui::NewLine(); ImGui::NewLine();
+	ImGui::Text("Select the type of message you want to send:");
+
+	if (ImGui::BeginCombo("##Action combo", "placeholder label"))
+	{
+		for (int n = 0; n < availableActions.size(); n++)
+		{
+			const bool is_selected = (selectedActionId == n);
+			if (ImGui::Selectable("placeholder label", is_selected)) //change label por el real
+			{
+				selectedActionId = n;
+				//if availableActions == showtranfermenu = true; 
+			}
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
+
+	if (showTranferMenu)
+	{
+		ImGui::Text("Enter Coin Amount: ", ImGuiInputTextFlags_CharsDecimal); ImGui::SameLine();
+		ImGui::InputInt("Coin N", &coinN, 1, 5, ImGuiInputTextFlags_CharsDecimal);
+
+		ImGui::Text("Enter Public Key: "); ImGui::SameLine();
+		ImGui::InputText("Key", &publicKey);
+	}
+
+	if (ImGui::Button("Send Message", ImVec2(150, 40)))
+	{
+		//modify out acordingly
+	}
+
 }
 
 
@@ -304,7 +575,6 @@ void Gui::fileDialog()
 		ImGuiFileDialog::Instance()->Close();
 	}
 }
-
 
 
 bool Gui::showFile()
@@ -393,6 +663,85 @@ void Gui::showBlockInfo(void)
 void Gui::setBlockShownData(BlockShowData data)
 {
 	this->blockData = data;
+}
+
+
+/*Phase Two Methods (not ImGui related)*/
+
+void Gui::createNewNode()
+{
+	if (!this->nodeType)
+	{
+		nodes.push_back(NewNode(NodeTypes::NEW_FULL, nodes.size(), this->ip, this->port));
+	}
+	else
+	{
+		nodes.push_back(NewNode(NodeTypes::NEW_SVP, nodes.size(), this->ip, this->port));
+	}
+}
+
+void Gui::validateNeighbors(bool &openPopup)
+{
+	auto trueCount = std::count(nodeSelection.begin(), nodeSelection.end(), true);
+	
+	if (trueCount == 2)
+	{
+		/*Gets indexs of selected nodes*/
+		std::vector<int> nds;
+		for (int i = 0; i != nodeSelection.size(); ++i)
+		{
+			if (nodeSelection[i])
+			{
+				nds.push_back(i);
+			}
+		}
+
+		unsigned int idx1 = nodes[nds[0]].index;
+		unsigned int idx2 = nodes[nds[1]].index;
+		if (nodes[nds[0]].type == NodeTypes::NEW_SVP && nodes[nds[1]].type == NodeTypes::NEW_SVP)
+		{
+			//openpopup because cant make two spv nodes neighbors
+			ImGui::OpenPopup("control");
+			popupmsg = "Can't make two SPV nodes neighbors";
+			openPopup = true;
+		}
+		//Check if idx2 is in node array of first node, if it is they are already neighbors
+		else if(std::find(nodes[nds[0]].neighbors.begin(), nodes[nds[0]].neighbors.end(), idx2) != nodes[nds[0]].neighbors.end())
+		{
+			//Openpopup, they are already neighbors
+			ImGui::OpenPopup("control");
+			popupmsg = "the nodes are already neighbors";
+			openPopup = true;
+		}
+		else
+		{
+			nodes[nds[0]].neighbors.push_back(idx2);
+			nodes[nds[1]].neighbors.push_back(idx1);
+		}
+	}
+	else
+	{
+		ImGui::OpenPopup("control");
+		popupmsg = "Select more Nodes!!";
+		openPopup = true;
+	}
+}
+
+void Gui::popup(const char* msg)
+{
+	if (ImGui::BeginPopup("control"))
+	{
+		ImGui::Text(msg);
+		ImGui::EndPopup();
+	}
+}
+
+void Gui::resetNodeSelection(void)
+{
+	for (auto el: nodeSelection)
+	{
+		el = false;
+	}
 }
 
 /*Getters.*/

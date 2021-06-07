@@ -33,6 +33,15 @@ void App::dispatcher(const Events& event)
 		updateGuiBlockData();
 		gui->setResultMsg(blockChain.getBlockInfo(gui->getBlockIndex(), BlockInfo::CALCULATE_MROOT));
 		break;
+	case Events::NODES_CREATED_EV:
+		//Node Stuff----> create nodes in app (parses from node list in gui)
+		break;
+	case Events::SENDERNODE_SELECTED_EV:
+		//Some parsing to determine which nodes to show in receiver box----> write on receiver nodes.
+		break;
+	case Events::RECIEVERNODE_SELECTED_EV:
+		//Determine which actions to show on gui based on which nodes were selected in prior steps.
+		break;
 	default:
 		break;
 	}

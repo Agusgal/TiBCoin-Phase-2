@@ -1,8 +1,8 @@
 #include <iostream>
 #include "App/App.h"
 
-#define DEMO
-//#define APP
+//#define DEMO
+#define APP
 
 
 #ifdef APP
@@ -26,6 +26,12 @@ int main()
 	}
 }
 #endif //APP
+
+
+
+
+
+
 
 #ifdef DEMO
 
