@@ -2,7 +2,7 @@
 #include <string>
 #include <allegro5/allegro.h>
 #include <vector>
-
+#include "../Actions/Actions.h"
 
 /*Gui event codes.*/
 const enum class Events:int 
@@ -17,7 +17,13 @@ const enum class Events:int
 	FIRST_UPDATE_EV,
 	NODES_CREATED_EV,
 	SENDERNODE_SELECTED_EV,
-	RECIEVERNODE_SELECTED_EV
+	RECIEVERNODE_SELECTED_EV,
+	FILTER_EV,
+	MERKLEBLOCK_EV,
+	GET_BLOCKS_EV,
+	GET_HEADERS_EV,
+	TRANSACTION_EV,
+	POST_BLOCK_EV
 };
 
 
@@ -54,6 +60,7 @@ const enum class NodeTypes {
 	NEW_FULL,
 };
 
+
 /*Node struct that holds new node info that then gets parsed to App when we get to the action screen.*/
 struct NewNode 
 {
@@ -79,6 +86,9 @@ public:
 
 	const Events checkForEvent(void);
 
+	const std::vector<NewNode>& getNodes();
+	const NewNode& getNode(unsigned int index);
+
 	const unsigned int getBlockIndex() const;
 
 	const std::string& getFilename(void);
@@ -87,6 +97,19 @@ public:
 	void setBlockShownData(BlockShowData);
 
 	void setChainLength(unsigned int);
+
+	void updateComMsg(const std::string&);
+	const unsigned int& getSenderID();
+	const unsigned int& getReceiverID();
+	void infoGotten();
+
+	const int getAmount();
+	const std::string& getWallet();
+
+	void addReceiverNode(NewNode node);
+	void clearReceiverNodes(void);
+	void addAction(Actions action);
+	void clearAvailableActions(void);
 
 private:
 	
@@ -151,11 +174,13 @@ private:
 	/*Phase Two*/
 	std::vector<std::string> nodeIds;
 
+	std::string networkInfoMsg;
 
 	void createNewNode(void);
 	void validateNeighbors(bool &openPopup);
 	void nodeInitialization(Events& out);
 	void nodeActions(Events& out);
+
 
 	std::string ip;
 	int port;
@@ -164,15 +189,19 @@ private:
 	std::vector<bool> nodeSelection;
 	std::vector <NewNode> nodes;
 	std::vector <NewNode> receiverNodes;
-	std::vector <NewNode> availableActions;//cambiar por action u otra cosa
+	std::vector <Actions> availableActions;//cambiar por action u otra cosa
 
-	int selectedSenderId;
-	int selectedActionId;
+	unsigned int selectedSenderId;
+	unsigned int selectedActionId;
+
+	unsigned int selectedReceiverId;
 
 	bool showTranferMenu;
 
 	int coinN;
 	std::string publicKey;
+	std::string wallet;
+
 
 	void resetNodeSelection(void);
 

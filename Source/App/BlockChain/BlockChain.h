@@ -12,9 +12,17 @@ public:
 	BlockChain(const string&);
 
 	void loadBlockChain(const string& filename);
+	const string drawTree(unsigned int id);
+	void addBlock(const json&);
+
+	//getters
 	const string getBlockInfo(int id, const BlockInfo&);
 	const unsigned int getBlockQuantity();
-	const string drawTree(unsigned int id);
+	const json& getBlock(unsigned int);
+	unsigned int getBlockIndex(const std::string&);
+	const json& getHeader(unsigned int);
+	const std::vector<std::string>& getTree(unsigned int);
+
 
 private:
 	vector <BlockMicho> Blocks;

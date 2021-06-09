@@ -18,8 +18,18 @@ BlockMicho::~BlockMicho()
 BlockMicho::BlockMicho(const json& block)
 {
 	this->jsonData = block;
+	this->header = this->jsonData;
+	this->tx = this->header["tx"];
+	this->header.erase("tx");
+
+	header["height"] = to_string(header["height"].get<unsigned int>());
+	header["nonce"] = to_string(header["nonce"].get<unsigned int>());
+	header["nTx"] = to_string(header["nTx"].get<unsigned int>());
+
+
 	this->validated = false;
-	
+
+	//Deprecated
 	ntx = block["nTx"].get<unsigned int>();
 	height = block["height"].get<unsigned int>();
 	nonce = block["nonce"].get<unsigned int>();
@@ -29,58 +39,8 @@ BlockMicho::BlockMicho(const json& block)
 
 	auto transactions = block["tx"];
 
-	Transaction tempTransaction;
+	
 
-	for (auto& tx_ : transactions) 
-	{
-
-		auto nTxin_ = tx_["nTxin"].get<unsigned int>();
-		tempTransaction.setNtxin(nTxin_);
-
-		auto nTxout_ = tx_["nTxout"].get<unsigned int>();
-		tempTransaction.setNtxout(nTxout_);
-
-		auto txid_ = tx_["txid"].get<string>();
-		tempTransaction.setTxid(txid_);
-
-		auto vin_ = tx_["vin"];
-
-		for (auto& vin_json : vin_)
-		{
-			Vin tempvin;
-
-			auto blockid_ = vin_json["blockid"].get<string>();
-			tempvin.blockid = blockid_;
-
-			auto intxid_ = vin_json["txid"].get<string>();
-			tempvin.intxid = intxid_;
-
-			auto signature_ = vin_json["signature"].get<string>();
-			tempvin.signature = signature_;
-
-			auto outputIndex_ = vin_json["outputIndex"].get<int>();
-			tempvin.outputIndex = outputIndex_;
-
-			tempTransaction.setVin(tempvin);
-		}
-
-		auto vout_ = tx_["vout"];
-
-		for (auto& vout_json : vout_)
-		{
-			Vout tempvout;
-
-			auto amount_ = vout_json["amount"].get<unsigned int>();
-			tempvout.amount = amount_;
-
-			auto publicid_ = vout_json["publicid"].get<string>();
-			tempvout.publicid = publicid_;
-
-			tempTransaction.setVout(tempvout);
-		}
-
-		Tx.push_back(tempTransaction);
-	}
 }
 
 
@@ -239,63 +199,7 @@ std::string BlockMicho::printTree(void)
 
 
 
-//GETTERS
-unsigned int BlockMicho::getHeight(void) {
-	return height;
-}
 
-string BlockMicho::getMerkleRoot(void) {
-	return merkleRoot;
-}
-
-unsigned int BlockMicho::getNtx(void) {
-	return ntx;
-}
-
-string BlockMicho::getBlockid(void) {
-	return blockid;
-}
-
-unsigned int BlockMicho::getNonce(void) {
-	return nonce;
-}
-
-string BlockMicho::getPreviousBlockid(void) {
-	return previousBlockId;
-}
-
-vector<Transaction>& BlockMicho::getTx() {
-	return Tx;
-}
-
-//SETTERS
-void BlockMicho::setBlockid(string blockId_) {
-	blockid = blockId_;
-}
-
-void BlockMicho::setHeight(unsigned int height_) {
-	height = height_;
-}
-
-void BlockMicho::setMerkleRoot(string merkleRoot_) {
-	merkleRoot = merkleRoot_;
-}
-
-void BlockMicho::setNtx(unsigned int ntx_) {
-	ntx = ntx_;
-}
-
-void BlockMicho::setNonce(unsigned int nonce_) {
-	nonce = nonce_;
-}
-
-void BlockMicho::setPreviousBlockId(string previousBlockId_) {
-	previousBlockId = previousBlockId_;
-}
-
-void BlockMicho::setTx(Transaction tx_) {
-	Tx.push_back(tx_);
-}
 
 
 unsigned int BlockMicho::generateID(unsigned char* str)
@@ -313,9 +217,9 @@ const string BlockMicho::getData(const BlockInfo& data)
 	switch (data) 
 	{
 	case BlockInfo::BLOCKID:
-		return getBlockid();
+		return  header["blockid"];
 	case BlockInfo::BLOCK_NUMBER:
-		return to_string(getHeight());
+		return header["height"];
 	case BlockInfo::CALCULATE_MROOT:
 		if (!this->validated)
 		{
@@ -323,7 +227,7 @@ const string BlockMicho::getData(const BlockInfo& data)
 		}
 		return this->calculatedMerkleRoot;
 	case BlockInfo::SEE_MROOT:
-		return getMerkleRoot();
+		return header["merkleroot"];
 	case BlockInfo::VALIDATE_MROOT:
 		if (!this->validated)
 		{
@@ -331,11 +235,11 @@ const string BlockMicho::getData(const BlockInfo& data)
 		}
 		return this->isValidMR;
 	case BlockInfo::NTX:
-		return to_string(getNtx());
+		return header["nTx"];
 	case BlockInfo::NONCE:
-		return to_string(getNonce());
+		return header["nonce"];
 	case BlockInfo::PREVIOUS_BLOCKID:
-		return getPreviousBlockid();
+		return header["previousblockid"];
 	}
 }
 

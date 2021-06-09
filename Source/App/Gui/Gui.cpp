@@ -38,6 +38,7 @@ Gui::Gui(void) :
 	popupmsg = "";
 	selectedSenderId = 0;
 	selectedActionId = 0;
+	selectedReceiverId = 0;
 	showTranferMenu = false;
 	coinN = 0;
 	publicKey = "";
@@ -428,6 +429,7 @@ void Gui::nodeActions(Events& out)
 	if (ImGui::Button("Select Sender Node", ImVec2(150, 40)))
 	{
 		out = Events::SENDERNODE_SELECTED_EV;
+
 	}
 
 	
@@ -453,10 +455,10 @@ void Gui::nodeActions(Events& out)
 				nodeInfo += ("node" + std::to_string(receiverNodes[n].neighbors[k]) + " ");
 			}
 
-			const bool is_selected = (selectedSenderId == n);
+			const bool is_selected = (selectedReceiverId == n);
 			if (ImGui::Selectable(nodeInfo.c_str(), is_selected))
 			{
-				selectedSenderId = n;
+				selectedReceiverId = n;
 			}
 
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -476,12 +478,12 @@ void Gui::nodeActions(Events& out)
 	ImGui::NewLine(); ImGui::NewLine(); ImGui::NewLine();
 	ImGui::Text("Select the type of message you want to send:");
 
-	if (ImGui::BeginCombo("##Action combo", "placeholder label"))
+	if (ImGui::BeginCombo("##Action combo", "Select an action"))
 	{
 		for (int n = 0; n < availableActions.size(); n++)
 		{
 			const bool is_selected = (selectedActionId == n);
-			if (ImGui::Selectable("placeholder label", is_selected)) //change label por el real
+			if (ImGui::Selectable(availableActions[n].description.c_str(), is_selected)) //change label por el real
 			{
 				selectedActionId = n;
 				//if availableActions == showtranfermenu = true; 
@@ -494,6 +496,15 @@ void Gui::nodeActions(Events& out)
 		ImGui::EndCombo();
 	}
 
+	if (availableActions.size() && availableActions[selectedActionId].description == "Post Transaction")
+	{
+		showTranferMenu = true;
+	}
+	else
+	{
+		showTranferMenu = false;
+	}
+
 	if (showTranferMenu)
 	{
 		ImGui::Text("Enter Coin Amount: ", ImGuiInputTextFlags_CharsDecimal); ImGui::SameLine();
@@ -503,10 +514,38 @@ void Gui::nodeActions(Events& out)
 		ImGui::InputText("Key", &publicKey);
 	}
 
-	if (ImGui::Button("Send Message", ImVec2(150, 40)))
+	if (ImGui::Button("Execute Action", ImVec2(150, 40)))
 	{
-		//modify out acordingly
+		
+		if (availableActions[selectedActionId].description == "Post Block")
+		{
+			out = Events::POST_BLOCK_EV;
+		}
+		else if (availableActions[selectedActionId].description == "Post Transaction")
+		{
+			out = Events::TRANSACTION_EV;
+		}
+		else if (availableActions[selectedActionId].description == "Post merkleblock")
+		{
+			out = Events::MERKLEBLOCK_EV;
+		}
+		else if (availableActions[selectedActionId].description == "Post Filter")
+		{
+			out = Events::FILTER_EV;
+		}
+		else if (availableActions[selectedActionId].description == "Get Block headers")
+		{
+			out = Events::GET_HEADERS_EV;
+		}
+		else if (availableActions[selectedActionId].description == "Get Blocks")
+		{
+			out = Events::GET_BLOCKS_EV;
+		}
 	}
+
+	ImGui::SameLine();
+	ImGui::Text(networkInfoMsg.c_str());
+
 
 }
 
@@ -575,7 +614,6 @@ void Gui::fileDialog()
 		ImGuiFileDialog::Instance()->Close();
 	}
 }
-
 
 bool Gui::showFile()
 {
@@ -744,7 +782,69 @@ void Gui::resetNodeSelection(void)
 	}
 }
 
+void Gui::updateComMsg(const std::string &info)
+{
+	networkInfoMsg.append(info); 
+}
+
+const unsigned int& Gui::getSenderID() 
+{ 
+	return nodes[selectedSenderId].index;
+}
+
+const unsigned int& Gui::getReceiverID()
+{
+	return receiverNodes[selectedReceiverId].index;
+}
+
+void Gui::infoGotten() 
+{ 
+	wallet.clear(); 
+	coinN = 0;
+	event = Events::NO_EV; 
+}
+
+const int Gui::getAmount() 
+{ 
+	return coinN; 
+}
+
+const std::string& Gui::getWallet() 
+{ 
+	return wallet; 
+}
+
+void Gui::addReceiverNode(NewNode node)
+{
+	receiverNodes.push_back(node);
+}
+
+void Gui::clearReceiverNodes(void)
+{
+	receiverNodes.clear();
+}
+
+void Gui::addAction(Actions action)
+{
+	availableActions.push_back(action);
+}
+
+void Gui::clearAvailableActions(void)
+{
+	availableActions.clear();
+}
+
 /*Getters.*/
+const std::vector<NewNode>& Gui::getNodes()
+{
+	return nodes;
+}
+
+const NewNode& Gui::getNode(unsigned int index)
+{
+	return nodes[index];
+}
+
 const std::string& Gui::getFilename(void) 
 { 
 	return fileNamePath; 

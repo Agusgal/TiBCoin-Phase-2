@@ -3,6 +3,7 @@
 #include "json.hpp"
 #include <list>
 
+class BlockChain;
 
 const enum class BlockInfo
 {
@@ -28,30 +29,15 @@ public:
 
 	const string getData(const BlockInfo& data);
 
-
-	void setBlockid(string blockID_);
-	void setHeight(unsigned int height_);
-	void setMerkleRoot(string merkleRoot_);
-	void setNtx(unsigned int ntx_);
-	void setNonce(unsigned int nonce_);
-	void setPreviousBlockId(string previousBlockId_);
-	void setTx(Transaction tx_);
-
-	//friend class Merkle;
+	friend BlockChain;
 	std::string printTree(void);
 
 private:
 	string fliptree(string str);
 	
-	string getBlockid(void);
-	unsigned int getHeight(void);
-	string getMerkleRoot(void);
-	unsigned int getNtx(void);
-	unsigned int getNonce(void);
-	string getPreviousBlockid(void);
-	vector<Transaction>& getTx();
+	const std::list < std::string> getIDs();
+	
 
-	vector<Transaction> Tx;
 	unsigned int ntx;
 	unsigned int height;
 	unsigned int nonce;
@@ -72,8 +58,9 @@ private:
 	void buildTree();
 	std::vector<std::string> tree;
 
-	friend class Merkle;
-
+	
+	json tx;
+	json header;
 	json jsonData;
 	string calculatedMerkleRoot;
 	string isValidMR;

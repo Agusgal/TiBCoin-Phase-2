@@ -153,9 +153,15 @@
     <ClCompile Include="..\Source\App\BlockChain\Blocks\Block.cpp" />
     <ClCompile Include="..\Source\App\BlockChain\Blocks\Merkle.cpp" />
     <ClCompile Include="..\Source\App\BlockChain\Nodes\Node.cpp" />
+    <ClCompile Include="..\Source\App\BlockChain\Nodes\NodeFull.cpp" />
+    <ClCompile Include="..\Source\App\BlockChain\Nodes\NodeSPV.cpp" />
     <ClCompile Include="..\Source\App\Client\Client.cpp" />
+    <ClCompile Include="..\Source\App\Client\GetClient.cpp" />
+    <ClCompile Include="..\Source\App\Client\PostClient.cpp" />
     <ClCompile Include="..\Source\App\Gui\Gui.cpp" />
+    <ClCompile Include="..\Source\App\Server\FullServer.cpp" />
     <ClCompile Include="..\Source\App\Server\Server.cpp" />
+    <ClCompile Include="..\Source\App\Server\SVPServer.cpp" />
     <ClCompile Include="..\Source\Main.cpp" />
     <ClCompile Include="Transaction.cpp" />
   </ItemGroup>
@@ -170,6 +176,7 @@
     <ClInclude Include="..\Lib\ImGui\imstb_rectpack.h" />
     <ClInclude Include="..\Lib\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\Lib\ImGui\imstb_truetype.h" />
+    <ClInclude Include="..\Source\App\Actions\Actions.h" />
     <ClInclude Include="..\Source\App\App.h" />
     <ClInclude Include="..\Source\App\BlockChain\BlockChain.h" />
     <ClInclude Include="..\Source\App\BlockChain\Blocks\Block.h" />
@@ -177,9 +184,25 @@
     <ClInclude Include="..\Source\App\BlockChain\Blocks\Merkle.h" />
     <ClInclude Include="..\Source\App\BlockChain\Blocks\Transactions\Transaction.h" />
     <ClInclude Include="..\Source\App\BlockChain\Nodes\Node.h" />
+    <ClInclude Include="..\Source\App\BlockChain\Nodes\NodeFull.h" />
+    <ClInclude Include="..\Source\App\BlockChain\Nodes\NodeSPV.h" />
+    <ClInclude Include="..\Source\App\Client\AllClients.h" />
+    <ClInclude Include="..\Source\App\Client\BlockClient.h" />
     <ClInclude Include="..\Source\App\Client\Client.h" />
+    <ClInclude Include="..\Source\App\Client\FilterClient.h" />
+    <ClInclude Include="..\Source\App\Client\GetBlockClient.h" />
+    <ClInclude Include="..\Source\App\Client\GetClient.h" />
+    <ClInclude Include="..\Source\App\Client\GetHeaderClient.h" />
+    <ClInclude Include="..\Source\App\Client\MerkleClient.h" />
+    <ClInclude Include="..\Source\App\Client\PostClient.h" />
+    <ClInclude Include="..\Source\App\Client\TransactionClient.h" />
     <ClInclude Include="..\Source\App\Gui\Gui.h" />
+    <ClInclude Include="..\Source\App\Server\FullServer.h" />
     <ClInclude Include="..\Source\App\Server\Server.h" />
+    <ClInclude Include="..\Source\App\Server\SVPServer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\App\BlockChain\a.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

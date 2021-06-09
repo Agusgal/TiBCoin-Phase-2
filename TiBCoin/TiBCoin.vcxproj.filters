@@ -49,17 +49,26 @@
     <Filter Include="Header Files\App\Blockchain\Blocks\Transactions">
       <UniqueIdentifier>{05b6c7ae-73f9-4ec3-a34c-2cdf81bd2670}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\App\Server">
-      <UniqueIdentifier>{48eb0b35-df4a-4e30-8e87-f2f1114a64d3}</UniqueIdentifier>
+    <Filter Include="Header Files\App\Blockchain\Nodes">
+      <UniqueIdentifier>{a398c759-17ad-4b08-b1f3-4c5cfafcc642}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\App\Client">
-      <UniqueIdentifier>{3179672c-41c1-4515-969f-b2435a82727d}</UniqueIdentifier>
+    <Filter Include="Header Files\App\Blockchain\Nodes\Client">
+      <UniqueIdentifier>{eecc74e5-074c-4d60-8239-01d9fb6fed3e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\App\Server">
+    <Filter Include="Header Files\App\Blockchain\Nodes\Server">
       <UniqueIdentifier>{99451acd-2601-4600-9480-8916b0d06192}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\App\Client">
-      <UniqueIdentifier>{eecc74e5-074c-4d60-8239-01d9fb6fed3e}</UniqueIdentifier>
+    <Filter Include="Source Files\App\BlockChain\Nodes">
+      <UniqueIdentifier>{07fb5ae6-a944-4ddd-81f3-10ba29ebd8b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\App\BlockChain\Nodes\Client">
+      <UniqueIdentifier>{3179672c-41c1-4515-969f-b2435a82727d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\App\BlockChain\Nodes\Server">
+      <UniqueIdentifier>{48eb0b35-df4a-4e30-8e87-f2f1114a64d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\App\Actions">
+      <UniqueIdentifier>{1e8820e2-a3d7-4f65-b52d-0bc7943f0c9d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -108,14 +117,32 @@
     <ClCompile Include="..\Source\App\BlockChain\Blocks\Merkle.cpp">
       <Filter>Source Files\App\BlockChain\Blocks</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\App\Client\Client.cpp">
+      <Filter>Source Files\App\BlockChain\Nodes\Client</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\App\BlockChain\Nodes\Node.cpp">
-      <Filter>Source Files\App\BlockChain</Filter>
+      <Filter>Source Files\App\BlockChain\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\App\Server\Server.cpp">
-      <Filter>Source Files\App\Server</Filter>
+      <Filter>Source Files\App\BlockChain\Nodes\Server</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\App\Client\Client.cpp">
-      <Filter>Source Files\App\Client</Filter>
+    <ClCompile Include="..\Source\App\BlockChain\Nodes\NodeFull.cpp">
+      <Filter>Source Files\App\BlockChain\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\BlockChain\Nodes\NodeSPV.cpp">
+      <Filter>Source Files\App\BlockChain\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\Client\PostClient.cpp">
+      <Filter>Source Files\App\BlockChain\Nodes\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\Client\GetClient.cpp">
+      <Filter>Source Files\App\BlockChain\Nodes\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\Server\FullServer.cpp">
+      <Filter>Source Files\App\BlockChain\Nodes\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\App\Server\SVPServer.cpp">
+      <Filter>Source Files\App\BlockChain\Nodes\Server</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,14 +197,61 @@
     <ClInclude Include="..\Source\App\BlockChain\Blocks\Merkle.h">
       <Filter>Header Files\App\Blockchain\Blocks\Transactions</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\App\BlockChain\Nodes\Node.h">
-      <Filter>Header Files\App\Blockchain</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\App\Client\Client.h">
-      <Filter>Header Files\App\Client</Filter>
+      <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\App\Server\Server.h">
-      <Filter>Header Files\App\Server</Filter>
+      <Filter>Header Files\App\Blockchain\Nodes\Server</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\App\BlockChain\Nodes\Node.h">
+      <Filter>Header Files\App\Blockchain\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\BlockChain\Nodes\NodeFull.h">
+      <Filter>Header Files\App\Blockchain\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\BlockChain\Nodes\NodeSPV.h">
+      <Filter>Header Files\App\Blockchain\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Client\PostClient.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Client\BlockClient.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Client\FilterClient.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Client\GetBlockClient.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Client\GetClient.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Client\GetHeaderClient.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Client\MerkleClient.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Client\TransactionClient.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Client\AllClients.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Server\FullServer.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Server\SVPServer.h">
+      <Filter>Header Files\App\Blockchain\Nodes\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\App\Actions\Actions.h">
+      <Filter>Header Files\App\Actions</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\App\BlockChain\a.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
