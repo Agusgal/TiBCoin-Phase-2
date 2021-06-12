@@ -1,8 +1,6 @@
 #include "BlockChain.h"
 #include <fstream>
 
-
-
 using namespace std;
 
 BlockChain::BlockChain()

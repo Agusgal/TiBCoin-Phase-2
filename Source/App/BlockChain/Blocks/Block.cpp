@@ -5,10 +5,6 @@
 using namespace std;
 
 //Constructor and Destructor
-BlockMicho::BlockMicho()
-{
-
-}
 
 BlockMicho::~BlockMicho()
 {

@@ -22,21 +22,19 @@ using json = nlohmann::json;
 
 class BlockMicho {
 public:
-	//friend Merkle;
-	BlockMicho();
+	
 	BlockMicho(const json& block);
 	~BlockMicho();
 
-	const string getData(const BlockInfo& data);
-
 	friend BlockChain;
-	std::string printTree(void);
 
 private:
 	string fliptree(string str);
 	
 	const std::list < std::string> getIDs();
 	
+	const string getData(const BlockInfo& data);
+	std::string printTree(void);
 
 	unsigned int ntx;
 	unsigned int height;

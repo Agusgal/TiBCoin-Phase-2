@@ -2,9 +2,10 @@
 
 using json = nlohmann::json;
 
+
 //postClient constructor.
-PostClient::PostClient(const std::string& ip, const unsigned int self_port, const unsigned int out_port,
-	const json& data) : Client(ip, self_port, out_port), data(data)
+PostClient::PostClient(const std::string& ip, const unsigned int ownPort, const unsigned int outPort,
+	const json& data) : Client(ip, ownPort, outPort), data(data)
 {
 }
 
@@ -14,6 +15,7 @@ void PostClient::configureClient(void)
 {
 	rawReply.clear();
 	struct curl_slist* list = nullptr;
+	
 	//Sets header with token.
 	strData = "Data=" + data.dump();
 	list = curl_slist_append(list, strData.c_str());
@@ -22,27 +24,22 @@ void PostClient::configureClient(void)
 	{ 
 		throw std::exception("Failed to set POST request.");
 	}
-	//Sets handler and multihandler.
 	else if (curl_multi_add_handle(multiHandler, easyHandler) != CURLM_OK)
 	{
-		throw std::exception("Failed to set add handler en cURL");
+		throw std::exception("Failed to set add handler en cURL.");
 	}
-	//Sets URL to read from.
 	else if (curl_easy_setopt(easyHandler, CURLOPT_URL, url.c_str()) != CURLE_OK)
 	{
-		throw std::exception("Failed to set URL in cURL");
+		throw std::exception("Failed to set URL in cURL.");
 	}
-	//Sets protocols (HTTP and HTTPS).
 	else if (curl_easy_setopt(easyHandler, CURLOPT_PROTOCOLS, CURLPROTO_HTTP) != CURLE_OK)
 	{
-		throw std::exception("Failed to set HTTP protocol");
+		throw std::exception("Failed to set HTTP protocol.");
 	}
-	/*Sets port that receives request.*/
 	else if (curl_easy_setopt(easyHandler, CURLOPT_PORT, outPort) != CURLE_OK)
 	{
 		throw std::exception("Failed to set receiving port");
 	}
-	/*Sets port that sends request.*/
 	else if (curl_easy_setopt(easyHandler, CURLOPT_LOCALPORT, ownPort) != CURLE_OK)
 	{
 		throw std::exception("Failed to set sending port");
@@ -62,6 +59,14 @@ void PostClient::configureClient(void)
 	{
 		throw std::exception("Failed to set userData");
 	}
+
+//#ifdef _DEBUG
+//	if (curl_easy_setopt(easyHandler, CURLOPT_VERBOSE, 1L))
+//	{
+//		throw std::exception("Failed to set verbose mode");
+//	}
+//#endif // _DEBUG
+
 }
 
 PostClient::~PostClient() {}

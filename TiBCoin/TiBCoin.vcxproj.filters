@@ -138,12 +138,6 @@
     <ClCompile Include="..\Source\App\Client\GetClient.cpp">
       <Filter>Source Files\App\BlockChain\Nodes\Client</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\App\Server\FullServer.cpp">
-      <Filter>Source Files\App\BlockChain\Nodes\Server</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\App\Server\SVPServer.cpp">
-      <Filter>Source Files\App\BlockChain\Nodes\Server</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\App\Gui\Gui.h">
@@ -238,12 +232,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\App\Client\AllClients.h">
       <Filter>Header Files\App\Blockchain\Nodes\Client</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\App\Server\FullServer.h">
-      <Filter>Header Files\App\Blockchain\Nodes\Server</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\App\Server\SVPServer.h">
-      <Filter>Header Files\App\Blockchain\Nodes\Server</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\App\Actions\Actions.h">
       <Filter>Header Files\App\Actions</Filter>

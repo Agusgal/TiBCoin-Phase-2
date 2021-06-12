@@ -101,7 +101,7 @@ public:
 	void updateComMsg(const std::string&);
 	const unsigned int& getSenderID();
 	const unsigned int& getReceiverID();
-	void infoGotten();
+	void ReceivedInfo();
 
 	const int getAmount();
 	const std::string& getWallet();
@@ -148,6 +148,8 @@ private:
 	inline void renderScreen() const;
 	inline void setAllFalse(const States&);
 
+
+	void clearNetworkingInfo(void);
 
 	/*Exit and resize events.*/
 	bool windowEvents(void);

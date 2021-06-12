@@ -1,23 +1,22 @@
 #include "NodeFull.h"
-
 #include <typeinfo>
 #include "../../Client/AllClients.h"
 
 
-/*Text constants in requests.*/
-/************************************************/
-namespace {
+//Constants to satisfy request
+namespace 
+{
 	const char* BLOCKPOST = "send_block";
 	const char* TRANSPOST = "send_tx";
 	const char* FILTERPOST = "send_filter";
 	const char* BLOCKSGET = "get_blocks";
 	const char* HEADERGET = "get_block_header";
 }
-/************************************************/
 
-const json error = { "error" };
 
-/*Constructor. Uses Node constructor.*/
+const json error = {"error"};
+
+//Constructor inherits from Node ----> if you want to run this project you need to configure path below (it doesnt work for us for some reason without absolute paths)
 NodeFull::NodeFull(boost::asio::io_context& io_context, const std::string& ip,
 	const unsigned int port, const unsigned int identifier)
 	: Node(io_context, ip, port, identifier), blockChain("C:\\Users\\Agus\\source\\repos\\TiBCoin Phase 2\\Resources\\sample0.json")
@@ -25,47 +24,38 @@ NodeFull::NodeFull(boost::asio::io_context& io_context, const std::string& ip,
 }
 
 
-/*GET performer for GET blocks request. */
+//get block request
 void NodeFull::getBlocks(const unsigned int id, const std::string& blockID, const unsigned int count) 
 {
-	/*If node is free...*/
 	if (clientState == ConnectionState::FREE && !client) 
 	{
-		/*If id is a neighbor and count isn't null...*/
 		if (neighbors.find(id) != neighbors.end() && count) 
 		{
-			/*Sets new GetBlockClient.*/
 			client = new GetBlockClient(neighbors[id].ip, port + 1, neighbors[id].port, blockID, count);
-
-			/*Toggles state.*/
 			clientState = ConnectionState::PERFORMING;
 		}
 	}
 }
 
 
-/*POST connection for blocks.*/
+//Post block request
 void NodeFull::postBlock(const unsigned int id, const std::string& blockID) 
 {
-	/*If node is in client mode*/
 	if (clientState == ConnectionState::FREE && !client) 
 	{
-		/*If id is a neighbor and count isn't null...*/
 		if (neighbors.find(id) != neighbors.end()) 
 		{
-			/*Sets new BlockClient for POST request.*/
 			client = new BlockClient(neighbors[id].ip, port + 1, neighbors[id].port, blockChain.getBlock(0)/*getBlock(blockID)*/);
 			clientState = ConnectionState::PERFORMING;
 		}
 	}
 }
 
-/*POST merkleblock connection.*/
+//Post merkleblock request
 void NodeFull::postMerkleBlock(const unsigned int id, const std::string& blockID, const std::string& transID) 
 {
 	if (clientState == ConnectionState::FREE && !client) 
 	{
-		/*If id is a neighbor...*/
 		if (neighbors.find(id) != neighbors.end()) 
 		{
 			auto temp = getMerkleBlock(blockID, transID);
@@ -75,13 +65,11 @@ void NodeFull::postMerkleBlock(const unsigned int id, const std::string& blockID
 	}
 }
 
-/*Gets block from blockChain by ID.*/
+//Get block request
 const json& NodeFull::getBlock(const std::string& blockID) 
 {
-	/*Loops through every block in blockchain.*/
 	for (unsigned int i = 0; i < blockChain.getBlockQuantity(); i++)
 	{
-		/*If it finds the correct ID, it returns that node.*/
 		if (blockChain.getBlockInfo(i, BlockInfo::BLOCKID) == blockID)
 		{
 			return blockChain.getBlock(i);
@@ -93,47 +81,52 @@ const json& NodeFull::getBlock(const std::string& blockID)
 
 void NodeFull::transaction(const unsigned int id, const std::string& wallet, const unsigned int amount) 
 {
-	if (clientState == ConnectionState::FREE && !client) {
-		/*If id is a neighbor...*/
-		if (neighbors.find(id) != neighbors.end()) {
-			json tempData;
+	if (clientState == ConnectionState::FREE && !client) 
+	{
+		if (neighbors.find(id) != neighbors.end()) 
+		{
+			json var;
 
-			tempData["nTxin"] = 0;
-			tempData["nTxout"] = 1;
-			tempData["txid"] = "ABCDE123";
-			tempData["vin"] = json();
+			var["txid"] = "ABCDE123";
+			var["nTxin"] = 0;
+			var["nTxout"] = 1;
+			var["vin"] = json();
 
 			json vout;
 			vout["amount"] = amount;
 			vout["publicid"] = wallet;
 
-			tempData["vout"] = vout;
+			var["vout"] = vout;
 
-			client = new TransactionClient(neighbors[id].ip, port + 1, neighbors[id].port, tempData);
+			client = new TransactionClient(neighbors[id].ip, port + 1, neighbors[id].port, var);
 			clientState = ConnectionState::PERFORMING;
 		}
 	}
 }
 
+
 const json NodeFull::getMerkleBlock(const std::string& blockID, const std::string& transID) 
 {
-	//int k = blockChain.getBlockIndex(blockID);
 	unsigned int k = 0;
 	auto tree = blockChain.getTree(k);
 
-	/*for (unsigned int i = 0; i < tree.size(); i++) {
-		if (tree[i] == transID)
-			k = i;
-	}*/
 	json result;
-	int size = static_cast<int>(log2(tree.size() + 1));
+	int treeSize = static_cast<int>(log2(tree.size() + 1));
+	
 	std::vector<std::string> merklePath;
+
 	while (k < (tree.size() - 1)) 
 	{
-		if (k % 2) merklePath.push_back(tree[--k]);
-		else merklePath.push_back(tree[k + 1]);
+		if (k % 2)
+		{
+			merklePath.push_back(tree[--k]);
+		}
+		else
+		{
+			merklePath.push_back(tree[k + 1]);
+		}
 
-		k = static_cast<unsigned int>(k / 2 + pow(2, size - 1));
+		k = static_cast<unsigned int>(k / 2 + pow(2, treeSize - 1));
 	}
 
 	result["blockid"] = blockID;
@@ -144,11 +137,11 @@ const json NodeFull::getMerkleBlock(const std::string& blockID, const std::strin
 	return result;
 }
 
-/*Destructor. Uses Node destructor.*/
+
 NodeFull::~NodeFull() {}
 
 
-/*GET callback for server.*/
+//Get callback (Server)
 const std::string NodeFull::getResponse(const std::string& request, const boost::asio::ip::tcp::endpoint& nodeInfo) 
 {
 	json result;
@@ -156,67 +149,53 @@ const std::string NodeFull::getResponse(const std::string& request, const boost:
 	result["status"] = true;
 	int block;
 	serverState = ConnectionState::FAILED;
-	/*Checks for correct data input (one of the strings must be in the request).*/
+
+
 	if ((block = request.find(BLOCKSGET)) || request.find(HEADERGET)) 
 	{
-		/*Checks for correct syntax within data input.*/
+		int posId = request.find("block_id=");
+		int posCount = request.find("count=");
 
-		int pos_id = request.find("block_id=");
-		int pos_count = request.find("count=");
-
-		if (pos_id != std::string::npos && pos_count != std::string::npos) 
+		if (posId != std::string::npos && posCount != std::string::npos)
 		{
 			json response;
 
-			/*Parses input for id.*/
-			std::string id = request.substr(pos_id + 9, request.find_last_of("&") - pos_id - 9);
+			std::string id = request.substr(posId + 9, request.find_last_of("&") - posId - 9);
 
-			/*Parses input for count.*/
-			int count = std::stoi(request.substr(pos_count + 6, request.find("HTTP") - pos_count - 6));
+			int cont = std::stoi(request.substr(posCount + 6, request.find("HTTP") - posCount - 6));
 
-			/*Sets block's position in blockchain.*/
-			int abs = blockChain.getBlockIndex(id);
+			int absoluteIndex = blockChain.getBlockIndex(id);
 
-			/*Goes to next block.*/
-			if (!(++abs)) 
+			if (!(++absoluteIndex))
 			{
 				result["status"] = false;
 				result["result"] = 2;
 			}
-
 			else 
 			{
-				/*Loops through blockchain ('count' blocks or until end of blockchain).*/
-				while (abs < blockChain.getBlockQuantity() && count) 
+				while (absoluteIndex < blockChain.getBlockQuantity() && cont)
 				{
-					/*If it's a POST block...*/
 					if (block != std::string::npos) 
 					{
-						/*Attaches full block to response.*/
-						response.push_back(blockChain.getBlock(abs));
+						response.push_back(blockChain.getBlock(absoluteIndex));
 					}
-					/*Otherwise...*/
 					else 
 					{
-						/*Attaches header to response.*/
-						response.push_back(blockChain.getHeader(abs));
+						response.push_back(blockChain.getHeader(absoluteIndex));
 					}
-					count--;
+					cont--;
 					serverState = ConnectionState::OK;
 				}
 
-				/*Appends response to result.*/
 				result["result"] = response;
 			}
 		}
-		/*Format error.*/
 		else 
 		{
 			result["status"] = false;
 			result["result"] = 1;
 		}
 	}
-	/*Content error.*/
 	else
 	{
 		result["status"] = false;
@@ -226,7 +205,7 @@ const std::string NodeFull::getResponse(const std::string& request, const boost:
 	return headerFormat(result.dump());
 }
 
-/*POST callback for server.*/
+//Post server (Server)
 const std::string NodeFull::postResponse(const std::string& request, const boost::asio::ip::tcp::endpoint& nodeInfo) 
 {
 	setConnectedClientID(nodeInfo);
@@ -237,28 +216,25 @@ const std::string NodeFull::postResponse(const std::string& request, const boost
 	result["status"] = true;
 	result["result"] = NULL;
 
-	/*If it's POST block...*/
 	if (request.find(BLOCKPOST) != std::string::npos) 
 	{
-		/*Adds block to blockchain.*/
-		int content = request.find/*_last_of*/("Content-Type");
-		int data = request.find/*_last_of*/("Data=");
+		int content = request.find("Content-Type");
+		int data = request.find("Data=");
+
 		if (content == std::string::npos || data == std::string::npos)
+		{
 			result["status"] = false;
+		}
 		else 
 		{
 			blockChain.addBlock(json::parse(request.substr(data + 5, content - data - 5)));
 			serverState = ConnectionState::OK;
 		}
 	}
-
-	/*If it's a transaction...*/
 	else if (request.find(TRANSPOST) != std::string::npos) 
 	{
 		serverState = ConnectionState::OK;
 	}
-
-	/*If it's a filter...*/
 	else if (request.find(FILTERPOST) != std::string::npos) 
 	{
 		serverState = ConnectionState::OK;
@@ -268,13 +244,10 @@ const std::string NodeFull::postResponse(const std::string& request, const boost
 }
 
 
-/*Performs client mode. */
 void NodeFull::perform() 
 {
-	/*If node is in client mode...*/
 	if (client) 
 	{
-		/*If request has ended...*/
 		if (!client->performRequest())
 		{
 			if (typeid(*client) == typeid(GetBlockClient)) 
@@ -288,7 +261,6 @@ void NodeFull::perform()
 					}
 				}
 			}
-			/*Deletes client and set pointer to null.*/
 			delete client;
 			client = nullptr;
 			clientState = ConnectionState::FINISHED;

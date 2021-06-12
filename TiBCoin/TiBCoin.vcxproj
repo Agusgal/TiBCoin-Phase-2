@@ -159,9 +159,7 @@
     <ClCompile Include="..\Source\App\Client\GetClient.cpp" />
     <ClCompile Include="..\Source\App\Client\PostClient.cpp" />
     <ClCompile Include="..\Source\App\Gui\Gui.cpp" />
-    <ClCompile Include="..\Source\App\Server\FullServer.cpp" />
     <ClCompile Include="..\Source\App\Server\Server.cpp" />
-    <ClCompile Include="..\Source\App\Server\SVPServer.cpp" />
     <ClCompile Include="..\Source\Main.cpp" />
     <ClCompile Include="Transaction.cpp" />
   </ItemGroup>
@@ -197,9 +195,7 @@
     <ClInclude Include="..\Source\App\Client\PostClient.h" />
     <ClInclude Include="..\Source\App\Client\TransactionClient.h" />
     <ClInclude Include="..\Source\App\Gui\Gui.h" />
-    <ClInclude Include="..\Source\App\Server\FullServer.h" />
     <ClInclude Include="..\Source\App\Server\Server.h" />
-    <ClInclude Include="..\Source\App\Server\SVPServer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Source\App\BlockChain\a.json" />

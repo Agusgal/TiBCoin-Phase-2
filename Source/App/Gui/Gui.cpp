@@ -292,8 +292,7 @@ void Gui::phaseTwoMode(Events& out)
 	{
 		nodeInitialization(out);
 	}
-	
-	if (state == States::INIT_DONE)
+	else if(state == States::INIT_DONE)
 	{
 		nodeActions(out);
 	}
@@ -478,12 +477,18 @@ void Gui::nodeActions(Events& out)
 	ImGui::NewLine(); ImGui::NewLine(); ImGui::NewLine();
 	ImGui::Text("Select the type of message you want to send:");
 
-	if (ImGui::BeginCombo("##Action combo", "Select an action"))
+	std::string msg = "Select an Action";
+	if (availableActions.size())
+	{
+		msg = availableActions[selectedActionId].description;
+	}
+
+	if (ImGui::BeginCombo("##Action combo", msg.c_str()))
 	{
 		for (int n = 0; n < availableActions.size(); n++)
 		{
 			const bool is_selected = (selectedActionId == n);
-			if (ImGui::Selectable(availableActions[n].description.c_str(), is_selected)) //change label por el real
+			if (ImGui::Selectable(availableActions[n].description.c_str(), is_selected)) 
 			{
 				selectedActionId = n;
 				//if availableActions == showtranfermenu = true; 
@@ -543,10 +548,34 @@ void Gui::nodeActions(Events& out)
 		}
 	}
 
+
 	ImGui::SameLine();
-	ImGui::Text(networkInfoMsg.c_str());
+	//Child with textInfo
+	{
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
+		window_flags |= ImGuiWindowFlags_MenuBar;
+		ImGui::BeginChild("ChildInfo", ImVec2(500, 225), true, window_flags);
+
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("Networking Information"))
+			{
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
 
 
+		ImGui::Text(networkInfoMsg.c_str());
+
+		ImGui::EndChild();
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Clear Networking Info", ImVec2(180, 40)))
+	{
+		clearNetworkingInfo();
+	}
 }
 
 
@@ -787,6 +816,12 @@ void Gui::updateComMsg(const std::string &info)
 	networkInfoMsg.append(info); 
 }
 
+void Gui::clearNetworkingInfo(void)
+{
+	networkInfoMsg = "";
+}
+
+
 const unsigned int& Gui::getSenderID() 
 { 
 	return nodes[selectedSenderId].index;
@@ -797,7 +832,7 @@ const unsigned int& Gui::getReceiverID()
 	return receiverNodes[selectedReceiverId].index;
 }
 
-void Gui::infoGotten() 
+void Gui::ReceivedInfo() 
 { 
 	wallet.clear(); 
 	coinN = 0;
@@ -831,6 +866,7 @@ void Gui::addAction(Actions action)
 
 void Gui::clearAvailableActions(void)
 {
+	selectedActionId = 0;
 	availableActions.clear();
 }
 

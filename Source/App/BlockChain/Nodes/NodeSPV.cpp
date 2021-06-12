@@ -2,17 +2,18 @@
 #include "../../Client/AllClients.h"
 #include <typeinfo>
 
-namespace {
+namespace 
+{
 	const char* MERKLEPOST = "send_merkle_block";
 }
 
-/*SPV_Node constructor. Uses Node constructor.*/
+//Constructor inherits from Node
 NodeSPV::NodeSPV(boost::asio::io_context& io_context, const std::string& ip,
 	const unsigned int port, const unsigned int identifier) : Node(io_context, ip, port, identifier)
 {
 }
 
-/*GET callback for server.*/
+//Callback server get
 const std::string NodeSPV::getResponse(const std::string& request, const boost::asio::ip::tcp::endpoint& nodeInfo) 
 {
 	setConnectedClientID(nodeInfo);
@@ -21,12 +22,11 @@ const std::string NodeSPV::getResponse(const std::string& request, const boost::
 	json result;
 	result["status"] = false;
 
-	/*Content error.*/
 	result["result"] = 2;
 	return headerFormat(result.dump());
 }
 
-/*POST callback for server.*/
+//Post server callback
 const std::string NodeSPV::postResponse(const std::string& request, const boost::asio::ip::tcp::endpoint& nodeInfo)
 {
 	setConnectedClientID(nodeInfo);
@@ -35,13 +35,14 @@ const std::string NodeSPV::postResponse(const std::string& request, const boost:
 	result["status"] = true;
 	result["result"] = NULL;
 
-	/*Checks if it's a POST for merkleblock.*/
 	if (request.find(MERKLEPOST) != std::string::npos) 
 	{
-		int content = request.find/*_last_of*/("Content-Type");
-		int data = request.find/*_last_of*/("Data=");
+		int content = request.find("Content-Type");
+		int data = request.find("Data=");
 		if (content == std::string::npos || data == std::string::npos)
+		{
 			result["status"] = false;
+		}
 		else 
 		{
 			serverState = ConnectionState::OK;
@@ -56,37 +57,36 @@ const std::string NodeSPV::postResponse(const std::string& request, const boost:
 	return headerFormat(result.dump());
 }
 
-/*Destructor. Uses Node destructor.*/
+
 NodeSPV::~NodeSPV() {}
 
 void NodeSPV::postFilter(const unsigned int id, const std::string& key) 
 {
 	if (clientState == ConnectionState::FREE && !client) 
 	{
-		/*If id is a neighbor...*/
 		if (neighbors.find(id) != neighbors.end()) 
 		{
-			json tempData;
+			json var;
 
-			tempData["key"] = key;
+			var["key"] = key;
 
-			client = new FilterClient(neighbors[id].ip, port + 1, neighbors[id].port, tempData);
+			client = new FilterClient(neighbors[id].ip, port + 1, neighbors[id].port, var);
 			clientState = ConnectionState::PERFORMING;
 		}
 	}
 };
+
 void NodeSPV::transaction(const unsigned int id, const std::string& wallet, const unsigned int amount) 
 {
 	if (clientState == ConnectionState::FREE && !client) 
 	{
-		/*If id is a neighbor...*/
 		if (neighbors.find(id) != neighbors.end()) 
 		{
 			json tempData;
 
+			tempData["txid"] = "ABCDE123";
 			tempData["nTxin"] = 0;
 			tempData["nTxout"] = 1;
-			tempData["txid"] = "ABCDE123";
 			tempData["vin"] = json();
 
 			json vout;
@@ -100,30 +100,24 @@ void NodeSPV::transaction(const unsigned int id, const std::string& wallet, cons
 		}
 	}
 }
+
 void NodeSPV::getBlockHeaders(const unsigned int id, const std::string& blockID, const unsigned int count) 
 {
-	/*If node is free...*/
 	if (clientState == ConnectionState::FREE && !client) 
 	{
-		/*If id is a neighbor and count isn't null...*/
 		if (neighbors.find(id) != neighbors.end() && count) 
 		{
-			/*Sets new GETBlockClient.*/
 			client = new GetHeaderClient(neighbors[id].ip, port + 1, neighbors[id].port, blockID, count);
-
-			/*Toggles state.*/
 			clientState = ConnectionState::PERFORMING;
 		}
 	}
 };
 
-/*Performs client mode. */
+
 void NodeSPV::perform()
 {
-	/*If node is in client mode...*/
 	if (client) 
 	{
-		/*If request has ended...*/
 		if (!client->performRequest()) 
 		{
 			if (typeid(*client) == typeid(GetHeaderClient)) 
@@ -135,7 +129,6 @@ void NodeSPV::perform()
 						headers.push_back(header);
 				}
 			}
-			/*Deletes client and set pointer to null.*/
 			delete client;
 			client = nullptr;
 			clientState = ConnectionState::FINISHED;

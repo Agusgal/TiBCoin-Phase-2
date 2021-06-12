@@ -5,35 +5,31 @@ GetClient::GetClient(const std::string& ip, const unsigned int ownPort, const un
 {
 }
 
-//Configurates client.
+//Configures client.
 void GetClient::configureClient(void) 
 {
 	rawReply.clear();
 
-	//Sets handler and multihandler.
+
 	if (curl_multi_add_handle(multiHandler, easyHandler) != CURLM_OK)
 	{
-		throw std::exception("Failed to set add handler en cURL");
+		throw std::exception("Failed to set add handler en cURL.");
 	}
-	//Sets URL to read from.
 	else if (curl_easy_setopt(easyHandler, CURLOPT_URL, url.c_str()) != CURLE_OK)
 	{
-		throw std::exception("Failed to set URL in cURL");
+		throw std::exception("Failed to set URL in cURL.");
 	}
-	//Sets protocols (HTTP and HTTPS).
 	else if (curl_easy_setopt(easyHandler, CURLOPT_PROTOCOLS, CURLPROTO_HTTP) != CURLE_OK)
 	{
-		throw std::exception("Failed to set HTTP protocol");
+		throw std::exception("Failed to set HTTP protocol.");
 	}
-	/*Sets port that receives request.*/
 	else if (curl_easy_setopt(easyHandler, CURLOPT_PORT, outPort) != CURLE_OK)
 	{
-		throw std::exception("Failed to set receiving port");
+		throw std::exception("Failed to set receiving port.");
 	}
-	/*Sets port that sends request.*/
 	else if (curl_easy_setopt(easyHandler, CURLOPT_LOCALPORT, ownPort) != CURLE_OK)
 	{
-		throw std::exception("Failed to set sending port");
+		throw std::exception("Failed to set sending port.");
 	}
 	
 	//Sets callback and userData.
@@ -46,4 +42,16 @@ void GetClient::configureClient(void)
 	{
 		throw std::exception("Failed to set userData");
 	}
+
+	if (curl_easy_setopt(easyHandler, CURLOPT_FORBID_REUSE, 1L))
+	{
+		throw std::exception("Failed to set up reuse");
+	}
+
+//#ifdef _DEBUG
+//	if (curl_easy_setopt(easyHandler, CURLOPT_VERBOSE, 1L))
+//	{
+//		throw std::exception("Failed to set verbose mode");
+//	}
+//#endif // _DEBUG
 }

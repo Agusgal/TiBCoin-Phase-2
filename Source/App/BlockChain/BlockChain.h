@@ -7,8 +7,8 @@ using namespace std;
 class BlockChain
 {
 public:
-	BlockChain();
 	~BlockChain();
+	BlockChain();
 	BlockChain(const string&);
 
 	void loadBlockChain(const string& filename);

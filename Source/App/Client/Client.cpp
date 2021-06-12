@@ -2,8 +2,6 @@
 #include <iostream>
 
 
-
-
 Client::Client(const std::string& ip, const unsigned int ownPort, const unsigned int outPort) : ip(ip), ownPort(ownPort),
 outPort(outPort), multiHandler(nullptr), easyHandler(nullptr) 
 {
@@ -12,22 +10,24 @@ outPort(outPort), multiHandler(nullptr), easyHandler(nullptr)
 		stillRunning = 1;
 	}
 	else
+	{
 		throw std::exception("Wrong input in client.");
+	}
 
-	url = ip + '/' + "eda_coins";
+	url = ip + '/' + stdURL;
 };
 
 //Performs request.
 bool Client::performRequest(void) 
 {
 	bool stillOn = true;
-	static bool step = false;
-	try {
+	static bool first = false;
+	try 
+	{
 		if (ip.length() && ownPort && outPort) 
 		{
-			if (!step) 
+			if (!first) 
 			{
-				//Sets easy and multi modes with error checker.
 				if (!(easyHandler = curl_easy_init()))
 				{
 					throw std::exception("Failed to initialize easy handler.");
@@ -38,12 +38,10 @@ bool Client::performRequest(void)
 					throw std::exception("Failed to initialize multi handler.");
 				}
 
-				//If it's the first time in this run, it sets the request parameters.
 				configureClient();
-				step = true;
+				first = true;
 			}
 
-			//Should be an if. Performs one request and checks for errors.
 			if (stillRunning) 
 			{
 				if (curl_multi_perform(multiHandler, &stillRunning) != CURLM_OK) 
@@ -57,17 +55,15 @@ bool Client::performRequest(void)
 			}
 			else 
 			{
-				//Cleans used variables.
+				//Cleans
 				curl_easy_cleanup(easyHandler);
 				curl_multi_cleanup(multiHandler);
 
-				//Resets step to false.
-				step = false;
+				first = false;
 
-				//Resets stillRunning to 1;
 				stillRunning = 1;
 
-				//Parses answer.
+				//Parse reply from rawreply
 				try 
 				{
 					answer = json::parse(rawReply);
@@ -76,9 +72,9 @@ bool Client::performRequest(void)
 				{
 					throw std::exception("Invalid Data. Wrong JSON format.");
 				}
+				
 				std::cout << "Received: " << answer << std::endl;
 
-				//Sets result to 'FALSE', to end loop.
 				stillOn = false;
 			}
 		}
@@ -91,7 +87,7 @@ bool Client::performRequest(void)
 	{
 		answer = e.what();
 		stillOn = false;
-		step = false;
+		first = false;
 		stillRunning = 1;
 		std::cout << "Received: " << answer << std::endl;
 	}
